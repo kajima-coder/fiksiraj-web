@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Fiksiraj</string>
+    <string name="title_activity_main">Fiksiraj</string>
+    <string name="package_name">hr.solvix.fiksiraj</string>
+    <string name="custom_url_scheme">hr.solvix.fiksiraj</string>
+</resources>

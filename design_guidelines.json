@@ -1,0 +1,135 @@
+{
+  "identity": {
+    "name": "Fiksiraj",
+    "persona": "The Swiss Utility",
+    "tone": "Reliable, Efficient, Clean, Professional",
+    "description": "A no-nonsense booking platform for Balkan home service professionals. It values clarity over decoration, speed over animation, and trust over trends."
+  },
+  "typography": {
+    "font_family": {
+      "headings": "Manrope, sans-serif",
+      "body": "Inter, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "scale": {
+      "h1": "text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight",
+      "h2": "text-3xl md:text-4xl font-bold tracking-tight",
+      "h3": "text-2xl md:text-3xl font-bold tracking-tight",
+      "h4": "text-xl md:text-2xl font-semibold tracking-tight",
+      "body_large": "text-lg leading-relaxed",
+      "body_base": "text-base leading-relaxed text-slate-600",
+      "body_small": "text-sm leading-relaxed text-slate-500",
+      "caption": "text-xs font-medium text-slate-400 uppercase tracking-wider"
+    },
+    "instructions": "Import 'Manrope' from Google Fonts for headings. Use 'Inter' for everything else. Headings must be tight (tracking-tight). Body text should have relaxed line height."
+  },
+  "colors": {
+    "palette": {
+      "primary": {
+        "DEFAULT": "#2563EB",
+        "foreground": "#FFFFFF",
+        "hover": "#1D4ED8",
+        "active": "#1E40AF"
+      },
+      "secondary": {
+        "DEFAULT": "#F1F5F9",
+        "foreground": "#0F172A",
+        "hover": "#E2E8F0"
+      },
+      "accent": {
+        "DEFAULT": "#F97316",
+        "foreground": "#FFFFFF",
+        "hover": "#EA580C"
+      },
+      "background": "#FFFFFF",
+      "surface": "#F8FAFC",
+      "border": "#E2E8F0",
+      "text": {
+        "primary": "#0F172A",
+        "secondary": "#64748B",
+        "muted": "#94A3B8"
+      },
+      "success": "#16A34A",
+      "warning": "#F59E0B",
+      "error": "#DC2626"
+    },
+    "theme_strategy": "Light Mode Primary. Dark mode uses Slate-950 background with Slate-900 surfaces.",
+    "gradients": "Do NOT use gradients for backgrounds. Use solid colors. Subtle gradients allowed on primary buttons only (e.g., bg-gradient-to-br from-blue-600 to-blue-700)."
+  },
+  "layout": {
+    "spacing_system": "Use generous padding. Section padding: py-16 or py-24. Card padding: p-6 or p-8. Gap: gap-6 or gap-8.",
+    "container": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+    "grid_strategy": {
+      "dashboard": "Bento Grid: mix of col-span-1, col-span-2, and row-span-2 items. Use 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4' base.",
+      "listings": "Responsive Grid: grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8."
+    },
+    "border_radius": {
+      "default": "rounded-none",
+      "buttons": "rounded-md",
+      "cards": "rounded-lg",
+      "inputs": "rounded-md"
+    },
+    "shadows": {
+      "card": "shadow-sm hover:shadow-md transition-shadow duration-200",
+      "dropdown": "shadow-lg border border-slate-100",
+      "button": "shadow-sm"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-primary text-primary-foreground hover:bg-primary-hover shadow-sm font-semibold py-2 px-4 rounded-md transition-all active:scale-95",
+      "secondary": "bg-white text-slate-900 border border-slate-200 hover:bg-slate-50 font-medium py-2 px-4 rounded-md transition-all active:scale-95",
+      "ghost": "text-slate-600 hover:bg-slate-100 hover:text-slate-900 py-2 px-4 rounded-md transition-colors",
+      "outline": "border-2 border-primary text-primary hover:bg-primary/5 font-semibold py-2 px-4 rounded-md"
+    },
+    "cards": {
+      "style": "bg-white border border-slate-200 rounded-lg overflow-hidden",
+      "hover": "hover:border-primary/50 transition-colors duration-300"
+    },
+    "inputs": {
+      "style": "bg-white border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-md h-11 px-4 text-base transition-all placeholder:text-slate-400"
+    },
+    "navigation": {
+      "header": "bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50",
+      "link": "text-sm font-medium text-slate-600 hover:text-primary transition-colors"
+    }
+  },
+  "visual_enhancers": {
+    "borders": "Use 'Grid Borders' style for dashboard sections: border-r border-b border-slate-100.",
+    "micro_interactions": "Add 'active:scale-95' to all interactive elements. Use 'group-hover' for card interactions.",
+    "icons": "Use lucide-react. Stroke width: 1.5px or 2px. Size: w-5 h-5 (default).",
+    "empty_states": "Use simple SVG illustrations or muted icons in a circle bg-slate-50."
+  },
+  "media": {
+    "image_style": "Object-cover. Rounded-lg for independent images. Full-width for hero backgrounds. Add a subtle overlay (bg-slate-900/10) if text is over image.",
+    "image_urls": {
+      "hero_bg": "https://images.unsplash.com/photo-1770656506117-2372e446b6fa?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjV8MHwxfHNlYXJjaHw0fHxwcm9mZXNzaW9uYWwlMjBwbHVtYmVyJTIwZWxlY3RyaWNpYW4lMjBwYWludGVyJTIwdG9vbHN8ZW58MHx8fHwxNzcyNDY2NDAyfDA&ixlib=rb-4.1.0&q=85",
+      "plumber_service": "https://images.unsplash.com/photo-1567102109796-90071d28cb38?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDJ8MHwxfHNlYXJjaHwxfHxwbHVtYmVyJTIwZml4aW5nJTIwc2luayUyMG1vZGVybiUyMGJhdGhyb29tfGVufDB8fHx8MTc3MjQ2NjQxMHww&ixlib=rb-4.1.0&q=85",
+      "electrician_service": "https://images.unsplash.com/photo-1731694411560-050e5b91e943?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjV8MHwxfHNlYXJjaHwyfHxwcm9mZXNzaW9uYWwlMjBwbHVtYmVyJTIwZWxlY3RyaWNpYW4lMjBwYWludGVyJTIwdG9vbHN8ZW58MHx8fHwxNzcyNDY2NDAyfDA&ixlib=rb-4.1.0&q=85",
+      "painter_service": "https://images.unsplash.com/photo-1654923203455-23b1e9dd97ec?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjV8MHwxfHNlYXJjaHwzfHxwcm9mZXNzaW9uYWwlMjBwbHVtYmVyJTIwZWxlY3RyaWNpYW4lMjBwYWludGVyJTIwdG9vbHN8ZW58MHx8fHwxNzcyNDY2NDAyfDA&ixlib=rb-4.1.0&q=85",
+      "generic_tools": "https://images.unsplash.com/photo-1645448118559-2dc2d8b9ba1f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjV8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBwbHVtYmVyJTIwZWxlY3RyaWNpYW4lMjBwYWludGVyJTIwdG9vbHN8ZW58MHx8fHwxNzcyNDY2NDAyfDA&ixlib=rb-4.1.0&q=85"
+    }
+  },
+  "accessibility": {
+    "contrast": "Ensure text-slate-500 is only used on white backgrounds. Use text-slate-600 for better readability.",
+    "focus_states": "focus:ring-2 focus:ring-offset-2 focus:ring-primary outline-none",
+    "reduced_motion": "Respect 'motion-safe' and 'prefers-reduced-motion' media queries."
+  },
+  "instructions_to_main_agent": {
+    "general": "Follow the 'Swiss Utility' persona. Keep it clean, structured, and fast. Avoid decorative elements that don't serve a purpose.",
+    "specific_pages": {
+      "landing": "Use the 'Hero' image with a bold H1: 'Profesionalci na dohvat ruke' (Professionals at your fingertips). Use the 'primary' blue for the main CTA 'Pronađi Majstora'.",
+      "dashboard": "Use a sidebar layout. The main content area should be a 'Bento Grid' of stats (Today's Bookings, Revenue, Rating). Use 'Grid Borders' styling.",
+      "booking_flow": "Step-by-step wizard. Clean inputs. Large clickable areas for time slots. Use 'Secondary' button style for unselected slots, 'Primary' for selected."
+    },
+    "components": "Reuse Shadcn components from /src/components/ui. Customize them to match the 'Swiss Utility' style (remove rounded-xl, use rounded-lg or rounded-md).",
+    "localization": "Ensure all static text is in Croatian. Use 'date-fns/locale/hr' for date formatting."
+  },
+  "UNIVERSAL_GUIDELINES": [
+    "Do NOT use gradients for text or backgrounds unless specified.",
+    "Do NOT use centered text for long paragraphs. Left align is better for reading.",
+    "Add 'data-testid' to all interactive elements.",
+    "Use 'sonner' for all notifications.",
+    "Ensure mobile responsiveness: 'max-w-full' for images, stack grids on mobile 'grid-cols-1'."
+  ]
+}

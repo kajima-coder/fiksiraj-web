@@ -1,0 +1,24 @@
+{
+  "appId": "hr.solvix.fiksiraj",
+  "appName": "Fiksiraj",
+  "webDir": "build",
+  "server": {
+    "androidScheme": "https",
+    "iosScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "launchAutoHide": true,
+      "backgroundColor": "#2563EB",
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": false
+    }
+  },
+  "android": {
+    "allowMixedContent": true
+  },
+  "ios": {
+    "contentInset": "automatic"
+  }
+}
