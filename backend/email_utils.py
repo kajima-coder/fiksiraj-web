@@ -6,21 +6,7 @@ from sendgrid.helpers.mail import Mail
 import logging
 import time
 
-# Load environment variables
-ROOT_DIR = Path(__file__).parent
-load_dotenv(ROOT_DIR / '.env')
-
 logger = logging.getLogger(__name__)
-
-SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
-FROM_EMAIL = os.environ.get('SENDGRID_FROM_EMAIL', 'noreply@solvix.hr')
-FROM_NAME = os.environ.get('SENDGRID_FROM_NAME', 'Fiksiraj')
-
-# Log configuration on module load
-logger.info(f"[EMAIL CONFIG] SENDGRID_API_KEY loaded: {'YES' if SENDGRID_API_KEY else 'NO'}")
-logger.info(f"[EMAIL CONFIG] SENDGRID_API_KEY length: {len(SENDGRID_API_KEY) if SENDGRID_API_KEY else 0}")
-logger.info(f"[EMAIL CONFIG] FROM_EMAIL: {FROM_EMAIL}")
-logger.info(f"[EMAIL CONFIG] FROM_NAME: {FROM_NAME}")
 
 # Email subject prefix for consistent branding
 SUBJECT_PREFIX = "[Fiksiraj]"
@@ -29,44 +15,80 @@ SUBJECT_PREFIX = "[Fiksiraj]"
 MAX_RETRIES = 3
 RETRY_DELAY_SECONDS = 2
 
+# Ensure .env is loaded (idempotent - safe to call multiple times)
+ROOT_DIR = Path(__file__).parent
+_env_loaded = False
+
+
+def _ensure_env_loaded():
+    """Ensure environment variables are loaded from .env file."""
+    global _env_loaded
+    if not _env_loaded:
+        load_dotenv(ROOT_DIR / '.env', override=True)
+        _env_loaded = True
+
+
+def _get_sendgrid_config():
+    """Get SendGrid configuration at runtime (not cached at module load)."""
+    _ensure_env_loaded()
+    return {
+        'api_key': os.environ.get('SENDGRID_API_KEY'),
+        'from_email': os.environ.get('SENDGRID_FROM_EMAIL', 'noreply@solvix.hr'),
+        'from_name': os.environ.get('SENDGRID_FROM_NAME', 'Fiksiraj'),
+    }
+
 
 def send_email_with_retry(to_email: str, subject: str, html_content: str, max_retries: int = MAX_RETRIES) -> bool:
     """Send email with retry logic"""
     logger.info(f"[EMAIL SEND] Starting send_email_with_retry to: {to_email}, subject: {subject}")
     
+    # Get config at send time (not module load time)
+    config = _get_sendgrid_config()
+    api_key = config['api_key']
+    from_email = config['from_email']
+    from_name = config['from_name']
+    
+    if not api_key:
+        logger.error(f"[EMAIL ERROR] SendGrid API key not found in environment")
+        return False
+    
+    # Log key info for debugging (safely)
+    logger.info(f"[EMAIL CONFIG] API key present: YES, length: {len(api_key)}, starts with: {api_key[:10]}...")
+    logger.info(f"[EMAIL CONFIG] FROM: {from_name} <{from_email}>")
+    
     for attempt in range(max_retries):
         try:
             message = Mail(
-                from_email=(FROM_EMAIL, FROM_NAME),
+                from_email=(from_email, from_name),
                 to_emails=to_email,
                 subject=subject,
                 html_content=html_content
             )
             
             logger.info(f"[EMAIL SEND] Attempt {attempt + 1}/{max_retries} - Calling SendGrid API...")
-            sg = SendGridAPIClient(SENDGRID_API_KEY)
+            sg = SendGridAPIClient(api_key)
             response = sg.send(message)
             logger.info(f"[EMAIL SUCCESS] Email sent to {to_email}, status code: {response.status_code}, attempt: {attempt + 1}")
-            logger.info(f"[EMAIL SUCCESS] Response headers: {response.headers}")
             return True
         except Exception as e:
-            logger.warning(f"[EMAIL FAIL] Attempt {attempt + 1}/{max_retries} failed for {to_email}: {str(e)}")
+            error_msg = str(e)
+            logger.warning(f"[EMAIL FAIL] Attempt {attempt + 1}/{max_retries} failed for {to_email}: {error_msg}")
+            
+            # If 401 Unauthorized, API key is invalid - no point retrying
+            if "401" in error_msg or "Unauthorized" in error_msg:
+                logger.error(f"[EMAIL ERROR] SendGrid API key is INVALID or REVOKED. Please update SENDGRID_API_KEY in /app/backend/.env")
+                return False
+            
             if attempt < max_retries - 1:
                 time.sleep(RETRY_DELAY_SECONDS * (attempt + 1))  # Exponential backoff
             else:
-                logger.error(f"[EMAIL ERROR] Failed to send email to {to_email} after {max_retries} attempts: {str(e)}")
+                logger.error(f"[EMAIL ERROR] Failed to send email to {to_email} after {max_retries} attempts: {error_msg}")
     return False
 
 
 def send_email(to_email: str, subject: str, html_content: str):
     """Send email using SendGrid with retry logic"""
     logger.info(f"[EMAIL] send_email called - to: {to_email}, subject: {subject}")
-    
-    if not SENDGRID_API_KEY:
-        logger.error(f"[EMAIL ERROR] SendGrid API key not configured, email to {to_email} not sent")
-        return False
-    
-    logger.info(f"[EMAIL] API key present, proceeding to send...")
     return send_email_with_retry(to_email, subject, html_content)
 
 
