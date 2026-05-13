@@ -644,6 +644,48 @@ input, textarea, select, button {
     line-height: 1.5;
 }
 
+/* ============================================
+   iOS Safari Select Fix
+   Ensures native picker wheel works on mobile
+   ============================================ */
+
+/* Mobile-specific select styling */
+@media (max-width: 768px) {
+    select.form-input {
+        /* Restore native appearance on mobile for iOS picker wheel */
+        -webkit-appearance: menulist !important;
+        appearance: menulist !important;
+        /* Ensure proper touch target size */
+        min-height: 48px;
+        /* Fix iOS text rendering */
+        font-size: 16px !important; /* Prevents iOS zoom on focus */
+        /* Ensure clickable */
+        cursor: pointer;
+        /* Remove any transforms that might interfere */
+        transform: none !important;
+    }
+    
+    /* Ensure the select container doesn't clip the picker */
+    select.form-input:focus {
+        outline: none;
+        /* iOS needs this for proper picker display */
+        -webkit-tap-highlight-color: transparent;
+    }
+}
+
+/* Desktop keeps custom styling */
+@media (min-width: 769px) {
+    select.form-input {
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 20px;
+        padding-right: 44px;
+    }
+}
+
 /* Body text */
 p, span, li, a, label {
     font-family: 'Inter', sans-serif;

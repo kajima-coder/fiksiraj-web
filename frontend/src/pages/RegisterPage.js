@@ -137,13 +137,13 @@ const RegisterPage = () => {
               <div className="sm:col-span-2">
                 <Label htmlFor="profession" className="form-label">Zanimanje</Label>
                 <div className="relative">
-                  <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 z-10 pointer-events-none" />
+                  <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 z-10 pointer-events-none hidden sm:block" />
                   <select
                     id="profession"
                     required
                     value={formData.profession}
                     onChange={(e) => setFormData({ ...formData, profession: e.target.value })}
-                    className="form-input pl-12 w-full appearance-none cursor-pointer"
+                    className="form-input sm:pl-12 pl-4 w-full cursor-pointer"
                     data-testid="register-profession-input"
                   >
                     <option value="">Odaberite zanimanje</option>
@@ -158,13 +158,13 @@ const RegisterPage = () => {
               <div className="sm:col-span-2">
                 <Label htmlFor="city" className="form-label">Grad</Label>
                 <div className="relative">
-                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 z-10 pointer-events-none" />
+                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 z-10 pointer-events-none hidden sm:block" />
                   <select
                     id="city"
                     required
                     value={formData.city}
                     onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                    className="form-input pl-12 w-full appearance-none cursor-pointer"
+                    className="form-input sm:pl-12 pl-4 w-full cursor-pointer"
                     data-testid="register-city-input"
                   >
                     <option value="">Odaberite grad</option>
