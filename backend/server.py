@@ -462,7 +462,7 @@ async def forgot_password(data: ForgotPasswordRequest, background_tasks: Backgro
         }}
     )
     
-    frontend_url = os.environ.get('FRONTEND_URL', 'https://probook-balkans.preview.emergentagent.com')
+    frontend_url = os.environ.get('FRONTEND_URL', 'https://solvix.hr')
     reset_link = f"{frontend_url}/resetiraj-lozinku/{reset_token}"
     
     background_tasks.add_task(
@@ -700,7 +700,7 @@ async def complete_booking(booking_id: str, current_professional: dict = Depends
     
     # Send review request email to client if email is available
     if booking.get("client_email") and background_tasks:
-        frontend_url = os.environ.get('FRONTEND_URL', 'https://probook-balkans.preview.emergentagent.com')
+        frontend_url = os.environ.get('FRONTEND_URL', 'https://solvix.hr')
         review_link = f"{frontend_url}/ocijeni/{booking_id}/{review_token}"
         
         logger.info(f"[COMPLETE BOOKING] Review link generated: {review_link}")
@@ -1713,7 +1713,7 @@ async def check_and_send_review_reminders():
                 
                 # Only send reminder if completed more than 3 days ago and token not expired
                 if completion_time <= three_days_ago and now < token_expires:
-                    frontend_url = os.environ.get('FRONTEND_URL', 'https://probook-balkans.preview.emergentagent.com')
+                    frontend_url = os.environ.get('FRONTEND_URL', 'https://solvix.hr')
                     review_link = f"{frontend_url}/ocijeni/{booking['id']}/{booking['review_token']}"
                     
                     # Calculate days remaining
