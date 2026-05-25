@@ -7,6 +7,7 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { hr } from 'date-fns/locale';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -31,7 +32,7 @@ const ReviewPage = () => {
       const response = await axios.get(`${API}/public/review/${bookingId}/${token}`);
       setBookingInfo(response.data);
     } catch (error) {
-      const detail = error.response?.data?.detail || 'Greška pri učitavanju podataka';
+      const detail = getErrorMessage(error, 'Greška pri učitavanju podataka');
       setErrorMessage(detail);
       
       // Determine error type for better UX
@@ -63,7 +64,7 @@ const ReviewPage = () => {
       setSubmitted(true);
       toast.success('Hvala na recenziji!');
     } catch (error) {
-      const detail = error.response?.data?.detail || 'Greška pri slanju recenzije';
+      const detail = getErrorMessage(error, 'Greška pri slanju recenzije');
       toast.error(detail);
       
       // If the error indicates expired or already reviewed, show error state

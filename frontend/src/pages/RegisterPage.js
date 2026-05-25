@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { CITIES, PROFESSIONS } from '@/constants';
 import { User, Briefcase, MapPin, Phone, Mail, Lock, ArrowRight, FileText, Building2, Eye, EyeOff } from 'lucide-react';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -61,7 +62,7 @@ const RegisterPage = () => {
       toast.success('Uspješna registracija!');
       navigate('/dashboard');
     } catch (error) {
-      toast.error(error.response?.data?.detail || 'Greška pri registraciji');
+      toast.error(getErrorMessage(error, 'Greška pri registraciji'));
     } finally {
       setLoading(false);
     }
