@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import axios from 'axios';
 import { format } from 'date-fns';
 import { hr } from 'date-fns/locale';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -121,7 +122,7 @@ const Dashboard = () => {
       }
     } catch (error) {
       console.error('Error creating checkout session:', error);
-      toast.error(error.response?.data?.detail || 'Greška pri aktivaciji pretplate');
+      toast.error(getErrorMessage(error, 'Greška pri aktivaciji pretplate'));
     } finally {
       setSubscriptionLoading(false);
     }

@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -25,7 +26,7 @@ const LoginPage = () => {
       toast.success('Uspješna prijava!');
       navigate('/dashboard');
     } catch (error) {
-      toast.error(error.response?.data?.detail || 'Greška pri prijavi');
+      toast.error(getErrorMessage(error, 'Greška pri prijavi'));
     } finally {
       setLoading(false);
     }

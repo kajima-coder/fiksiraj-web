@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar';
 import { User, Building2, Mail, Phone, Link as LinkIcon, CreditCard, Calendar, ExternalLink, Loader2, CheckCircle, AlertTriangle, Clock } from 'lucide-react';
 import { toast } from 'sonner';
 import axios from 'axios';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -63,8 +64,7 @@ const SettingsPage = () => {
       }
     } catch (error) {
       console.error('Error opening customer portal:', error);
-      const detail = error.response?.data?.detail || 'Greška pri otvaranju portala za upravljanje pretplatom';
-      toast.error(detail);
+      toast.error(getErrorMessage(error, 'Greška pri otvaranju portala za upravljanje pretplatom'));
     } finally {
       setPortalLoading(false);
     }
