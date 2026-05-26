@@ -46,8 +46,6 @@ export const PROFESSIONS = [
   'Čistač/ica',
   'Selidbe i prijevoz',
   'Monter namještaja',
-  'Elektroničar',
-  'Podopolagač',
   'Fasader',
   'Limar',
   'Građevinski radovi',

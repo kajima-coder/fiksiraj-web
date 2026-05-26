@@ -79,7 +79,7 @@
       "last 1 safari version"
     ]
   },
-"devDependencies": {
+   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "6",
@@ -102,3 +102,4 @@
     "node": "20.x"
   }
 }
+
