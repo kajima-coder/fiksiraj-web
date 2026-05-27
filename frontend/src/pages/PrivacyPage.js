@@ -1,163 +1,202 @@
-PRAVILA PRIVATNOSTI
+export default function PrivacyPage() {
+  return (
+    <div className="min-h-screen bg-slate-950 text-white px-6 py-16">
+      <div className="max-w-4xl mx-auto space-y-6">
+        <h1 className="text-4xl font-bold">Politika privatnosti</h1>
 
-Posljednje ažuriranje: 2026.
+        <p>
+          Posljednje ažuriranje: 2026.
+        </p>
 
-Ova Pravila privatnosti opisuju kako Solvix, obrt za IT usluge, vl. Antonio Bjeljac, Zagreb, Hrvatska (u daljnjem tekstu: „mi“, „nas“ ili „Platforma“) prikuplja, koristi i štiti osobne podatke korisnika web stranice i aplikacije Solvix.
+        <p>
+          Ova Pravila privatnosti opisuju kako Solvix, obrt za IT usluge,
+          vl. Antonio Bjeljac, Zagreb, Hrvatska (u daljnjem tekstu:
+          „mi“, „nas“ ili „Platforma“) prikuplja, koristi i štiti osobne
+          podatke korisnika web stranice i aplikacije Solvix.
+        </p>
 
-Korištenjem Platforme prihvaćate ova Pravila privatnosti.
+        <p>
+          Korištenjem Platforme prihvaćate ova Pravila privatnosti.
+        </p>
 
-1. Voditelj obrade
+        <h2 className="text-2xl font-semibold pt-4">
+          1. Voditelj obrade
+        </h2>
 
-Solvix, obrt za IT usluge
-vl. Antonio Bjeljac
-Zagreb, Hrvatska
+        <p>
+          Solvix, obrt za IT usluge<br />
+          vl. Antonio Bjeljac<br />
+          Zagreb, Hrvatska
+        </p>
 
-Kontakt email:
-[support@solvix.hr](mailto:support@solvix.hr)
+        <p>
+          Kontakt email: support@solvix.hr
+        </p>
 
-2. Podaci koje prikupljamo
+        <h2 className="text-2xl font-semibold pt-4">
+          2. Podaci koje prikupljamo
+        </h2>
 
-a) Profesionalci / izvođači usluga
+        <h3 className="text-xl font-semibold">
+          a) Profesionalci / izvođači usluga
+        </h3>
 
-Možemo prikupljati:
+        <ul className="list-disc pl-6 space-y-1">
+          <li>ime i prezime</li>
+          <li>naziv obrta ili tvrtke</li>
+          <li>email adresu</li>
+          <li>broj telefona</li>
+          <li>lokaciju / grad</li>
+          <li>opis usluga</li>
+          <li>podatke povezane s rezervacijama</li>
+        </ul>
 
-* ime i prezime
-* naziv obrta ili tvrtke
-* email adresu
-* broj telefona
-* lokaciju / grad
-* opis usluga
-* podatke povezane s rezervacijama
+        <h3 className="text-xl font-semibold">
+          b) Korisnici
+        </h3>
 
-b) Korisnici
+        <ul className="list-disc pl-6 space-y-1">
+          <li>ime i prezime</li>
+          <li>email adresu</li>
+          <li>broj telefona</li>
+          <li>podatke o rezervacijama</li>
+          <li>opis problema ili zahtjeva za uslugu</li>
+        </ul>
 
-Možemo prikupljati:
+        <h3 className="text-xl font-semibold">
+          c) Tehnički podaci
+        </h3>
 
-* ime i prezime
-* email adresu
-* broj telefona
-* podatke o rezervacijama
-* opis problema ili zahtjeva za uslugu
+        <ul className="list-disc pl-6 space-y-1">
+          <li>IP adresu</li>
+          <li>podatke o uređaju i pregledniku</li>
+          <li>logove sustava</li>
+          <li>tehničke podatke potrebne za sigurnost i funkcioniranje Platforme</li>
+        </ul>
 
-c) Tehnički podaci
+        <h2 className="text-2xl font-semibold pt-4">
+          3. Svrha obrade podataka
+        </h2>
 
-Automatski možemo prikupljati:
+        <ul className="list-disc pl-6 space-y-1">
+          <li>omogućavanje rezervacija i korištenja Platforme</li>
+          <li>komunikaciju između korisnika i profesionalaca</li>
+          <li>slanje email obavijesti i podsjetnika</li>
+          <li>omogućavanje recenzija i ocjena</li>
+          <li>sigurnost sustava i sprječavanje zlouporaba</li>
+          <li>poboljšanje funkcionalnosti i stabilnosti Platforme</li>
+          <li>ispunjavanje zakonskih obveza</li>
+        </ul>
 
-* IP adresu
-* podatke o uređaju i pregledniku
-* logove sustava
-* tehničke podatke potrebne za sigurnost i funkcioniranje Platforme
+        <h2 className="text-2xl font-semibold pt-4">
+          4. Pravna osnova obrade
+        </h2>
 
-3. Svrha obrade podataka
+        <ul className="list-disc pl-6 space-y-1">
+          <li>izvršenja ugovora i pružanja usluge</li>
+          <li>legitimnog interesa</li>
+          <li>zakonskih obveza</li>
+          <li>privole korisnika kada je primjenjivo</li>
+        </ul>
 
-Osobne podatke koristimo za:
+        <h2 className="text-2xl font-semibold pt-4">
+          5. Dijeljenje podataka
+        </h2>
 
-* omogućavanje rezervacija i korištenja Platforme
-* komunikaciju između korisnika i profesionalaca
-* slanje email obavijesti i podsjetnika
-* omogućavanje recenzija i ocjena
-* sigurnost sustava i sprječavanje zlouporaba
-* poboljšanje funkcionalnosti i stabilnosti Platforme
-* ispunjavanje zakonskih obveza
+        <p>
+          Podaci se mogu dijeliti s pouzdanim pružateljima usluga potrebnim za rad Platforme.
+        </p>
 
-4. Pravna osnova obrade
+        <ul className="list-disc pl-6 space-y-1">
+          <li>Vercel</li>
+          <li>Railway</li>
+          <li>MongoDB Atlas</li>
+          <li>SendGrid</li>
+          <li>Stripe</li>
+        </ul>
 
-Podaci se obrađuju na temelju:
+        <h2 className="text-2xl font-semibold pt-4">
+          6. Plaćanja i Stripe
+        </h2>
 
-* izvršenja ugovora i pružanja usluge
-* legitimnog interesa
-* zakonskih obveza
-* privole korisnika kada je primjenjivo
+        <p>
+          Online plaćanja i pretplate obrađuju se putem Stripe platforme.
+        </p>
 
-5. Dijeljenje podataka
+        <p>
+          Mi ne pohranjujemo potpune podatke o platnim karticama korisnika.
+        </p>
 
-Podaci se mogu dijeliti s pouzdanim pružateljima usluga potrebnim za rad Platforme, uključujući:
+        <p>
+          Više informacija: https://stripe.com/privacy
+        </p>
 
-* hosting i cloud pružatelje usluga
-* email servise
-* pružatelje infrastrukture i sigurnosti
-* Stripe za obradu plaćanja i pretplata
+        <h2 className="text-2xl font-semibold pt-4">
+          7. Čuvanje podataka
+        </h2>
 
-Platforma koristi usluge trećih strana uključujući, ali ne ograničavajući se na:
+        <ul className="list-disc pl-6 space-y-1">
+          <li>dok je korisnički račun aktivan</li>
+          <li>dok je potrebno za pružanje usluge</li>
+          <li>koliko nalažu zakonske obveze</li>
+        </ul>
 
-* Vercel
-* Railway
-* MongoDB Atlas
-* SendGrid
-* Stripe
+        <h2 className="text-2xl font-semibold pt-4">
+          8. Prava korisnika
+        </h2>
 
-Ti pružatelji mogu obrađivati određene podatke isključivo u svrhu pružanja svojih usluga.
+        <ul className="list-disc pl-6 space-y-1">
+          <li>pristupa podacima</li>
+          <li>ispravka podataka</li>
+          <li>brisanja podataka</li>
+          <li>ograničenja obrade</li>
+        </ul>
 
-6. Plaćanja i Stripe
+        <p>
+          Zahtjeve možete poslati na support@solvix.hr
+        </p>
 
-Online plaćanja i pretplate obrađuju se putem Stripe platforme.
+        <h2 className="text-2xl font-semibold pt-4">
+          9. Sigurnost podataka
+        </h2>
 
-Mi ne pohranjujemo potpune podatke o platnim karticama korisnika. Obrada plaćanja podliježe pravilima privatnosti i sigurnosnim standardima pružatelja usluge Stripe.
+        <p>
+          Poduzimamo razumne tehničke i organizacijske mjere za zaštitu osobnih podataka.
+        </p>
 
-Više informacija:
-[https://stripe.com/privacy](https://stripe.com/privacy)
+        <h2 className="text-2xl font-semibold pt-4">
+          10. Recenzije i sadržaj korisnika
+        </h2>
 
-7. Čuvanje podataka
+        <p>
+          Recenzije mogu ostavljati samo korisnici koji su imali dovršenu rezervaciju putem Platforme.
+        </p>
 
-Podatke čuvamo:
+        <h2 className="text-2xl font-semibold pt-4">
+          11. Kolačići i analitika
+        </h2>
 
-* dok je korisnički račun aktivan
-* dok je potrebno za pružanje usluge
-* koliko nalažu zakonske i računovodstvene obveze
-* do zahtjeva za brisanje kada je to primjenjivo
+        <p>
+          Platforma može koristiti kolačiće i osnovne analitičke alate radi poboljšanja korisničkog iskustva.
+        </p>
 
-8. Prava korisnika
+        <h2 className="text-2xl font-semibold pt-4">
+          12. Izmjene Pravila privatnosti
+        </h2>
 
-Korisnici imaju pravo:
+        <p>
+          Zadržavamo pravo izmjene ovih Pravila privatnosti u bilo kojem trenutku.
+        </p>
 
-* pristupa svojim podacima
-* ispravka netočnih podataka
-* brisanja podataka
-* ograničenja obrade
-* prigovora na obradu
-* prijenosa podataka kada je primjenjivo
+        <h2 className="text-2xl font-semibold pt-4">
+          13. Kontakt
+        </h2>
 
-Zahtjeve možete poslati na:
-
-[support@solvix.hr](mailto:support@solvix.hr)
-
-9. Sigurnost podataka
-
-Poduzimamo razumne tehničke i organizacijske mjere za zaštitu osobnih podataka od neovlaštenog pristupa, gubitka, zlouporabe ili izmjene.
-
-Iako nastojimo koristiti komercijalno prihvatljive metode zaštite podataka, nijedan sustav prijenosa ili pohrane podataka nije potpuno siguran.
-
-10. Recenzije i sadržaj korisnika
-
-Recenzije mogu ostavljati samo korisnici koji su imali dovršenu rezervaciju putem Platforme.
-
-Zadržavamo pravo ukloniti sadržaj koji je:
-
-* lažan
-* obmanjujući
-* uvredljiv
-* nezakonit
-* suprotan pravilima Platforme
-
-11. Kolačići i analitika
-
-Platforma može koristiti kolačiće i osnovne analitičke alate radi:
-
-* funkcioniranja stranice
-* sigurnosti
-* analize korištenja
-* poboljšanja korisničkog iskustva
-
-Korištenjem Platforme pristajete na uporabu nužnih kolačića potrebnih za rad sustava.
-
-12. Izmjene Pravila privatnosti
-
-Zadržavamo pravo izmjene ovih Pravila privatnosti u bilo kojem trenutku.
-
-Ažurirana verzija bit će objavljena na Platformi uz novi datum ažuriranja.
-
-13. Kontakt
-
-Za sva pitanja vezana uz privatnost i obradu podataka kontaktirajte nas na:
-
-[support@solvix.hr](mailto:support@solvix.hr)
+        <p>
+          support@solvix.hr
+        </p>
+      </div>
+    </div>
+  );
+}
+```
