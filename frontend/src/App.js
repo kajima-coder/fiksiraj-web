@@ -16,8 +16,6 @@ import SearchResultsPage from "@/pages/SearchResultsPage";
 import ReviewPage from "@/pages/ReviewPage";
 import { AuthProvider } from "@/context/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import PrivacyPage from "@/pages/PrivacyPage";
-import TermsPage from "@/pages/TermsPage";
 
 function App() {
   return (
@@ -32,8 +30,6 @@ function App() {
             <Route path="/zaboravili-lozinku" element={<ForgotPasswordPage />} />
             <Route path="/resetiraj-lozinku/:token" element={<ResetPasswordPage />} />
             <Route path="/ocijeni/:bookingId/:token" element={<ReviewPage />} />
-            <Route path="/politika-privatnosti" element={<PrivacyPage />} />
-            <Route path="/uvjeti-koristenja" element={<TermsPage />} />
             <Route
               path="/dashboard"
               element={

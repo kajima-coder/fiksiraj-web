@@ -28,6 +28,12 @@ const TOUR_STEPS = [
     icon: '💳'
   },
   {
+    id: 'settings',
+    title: 'Postavke',
+    text: 'U postavkama možete pregledati svoj profil, upravljati pretplatom i pristupiti korisničkom portalu.',
+    icon: '⚙️'
+  },
+  {
     id: 'finish',
     title: 'Spremni ste',
     text: 'Možete početi koristiti Fiksiraj i dijeliti svoj javni link klijentima.',

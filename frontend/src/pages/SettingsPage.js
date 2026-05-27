@@ -14,6 +14,7 @@ const SettingsPage = () => {
   const [subscriptionStatus, setSubscriptionStatus] = useState(null);
   const [loading, setLoading] = useState(true);
   const [portalLoading, setPortalLoading] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -67,6 +68,28 @@ const SettingsPage = () => {
       toast.error(getErrorMessage(error, 'Greška pri otvaranju portala za upravljanje pretplatom'));
     } finally {
       setPortalLoading(false);
+    }
+  };
+
+  const handleActivateSubscription = async () => {
+    setCheckoutLoading(true);
+    try {
+      const originUrl = window.location.origin;
+      const response = await axios.post(`${API}/create-checkout-session`, {
+        plan_id: 'monthly',
+        origin_url: originUrl
+      });
+      
+      if (response.data.url) {
+        window.location.href = response.data.url;
+      } else {
+        toast.error('Greška pri kreiranju sesije');
+      }
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+      toast.error(getErrorMessage(error, 'Greška pri aktivaciji pretplate'));
+    } finally {
+      setCheckoutLoading(false);
     }
   };
 
@@ -316,20 +339,48 @@ const SettingsPage = () => {
                   <p className="text-slate-500 text-sm mb-4">
                     Pretplata još nije aktivirana.
                   </p>
-                  <a href="/dashboard" className="btn-primary inline-flex items-center gap-2">
-                    <CreditCard className="w-5 h-5" />
-                    Aktiviraj pretplatu
-                  </a>
+                  <button 
+                    onClick={handleActivateSubscription}
+                    disabled={checkoutLoading}
+                    className="btn-primary inline-flex items-center gap-2"
+                    data-testid="settings-activate-subscription"
+                  >
+                    {checkoutLoading ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Učitavanje...
+                      </>
+                    ) : (
+                      <>
+                        <CreditCard className="w-5 h-5" />
+                        Aktiviraj pretplatu
+                      </>
+                    )}
+                  </button>
                 </div>
               ) : (
                 <div className="text-center py-4">
                   <p className="text-slate-500 text-sm mb-4">
                     Za upravljanje pretplatom potrebna je aktivna pretplata.
                   </p>
-                  <a href="/dashboard" className="btn-primary inline-flex items-center gap-2">
-                    <CreditCard className="w-5 h-5" />
-                    Obnovi pretplatu
-                  </a>
+                  <button 
+                    onClick={handleActivateSubscription}
+                    disabled={checkoutLoading}
+                    className="btn-primary inline-flex items-center gap-2"
+                    data-testid="settings-renew-subscription"
+                  >
+                    {checkoutLoading ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Učitavanje...
+                      </>
+                    ) : (
+                      <>
+                        <CreditCard className="w-5 h-5" />
+                        Obnovi pretplatu
+                      </>
+                    )}
+                  </button>
                 </div>
               )}
 
