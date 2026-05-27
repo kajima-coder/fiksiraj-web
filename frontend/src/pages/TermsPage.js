@@ -1,157 +1,196 @@
-UVJETI KORIŠTENJA
+export default function TermsPage() {
+  return (
+    <div className="min-h-screen bg-slate-950 text-white px-6 py-16">
+      <div className="max-w-4xl mx-auto space-y-6">
+        <h1 className="text-4xl font-bold">Uvjeti korištenja</h1>
 
-Posljednje ažuriranje: 2026.
+        <p>
+          Posljednje ažuriranje: 2026.
+        </p>
 
-Ovi Uvjeti korištenja uređuju korištenje aplikacije i web stranice Solvix (“Platforma”), kojom upravlja Solvix, obrt za IT usluge, vl. Antonio Bjeljac, sa sjedištem u Zagrebu, Hrvatska (“mi”, “nas”, “naše”).
+        <p>
+          Ovi Uvjeti korištenja uređuju korištenje aplikacije i web stranice
+          Solvix (“Platforma”), kojom upravlja Solvix, obrt za IT usluge,
+          vl. Antonio Bjeljac, sa sjedištem u Zagrebu, Hrvatska.
+        </p>
 
-Korištenjem Platforme prihvaćate ove Uvjete korištenja.
+        <p>
+          Korištenjem Platforme prihvaćate ove Uvjete korištenja.
+        </p>
 
-1. Opis usluge
+        <h2 className="text-2xl font-semibold pt-4">
+          1. Opis usluge
+        </h2>
 
-Platforma omogućuje:
+        <p>
+          Platforma omogućuje povezivanje korisnika i profesionalaca putem sustava rezervacija i recenzija.
+        </p>
 
-profesionalcima / izvođačima usluga izradu profila i objavu usluga
-korisnicima pretraživanje profesionalaca i podnošenje zahtjeva za rezervaciju termina
-razmjenu obavijesti o rezervacijama
-ostavljanje recenzija nakon dovršene usluge
+        <ul className="list-disc pl-6 space-y-1">
+          <li>izradu profesionalnih profila</li>
+          <li>pretragu profesionalaca</li>
+          <li>rezervaciju termina</li>
+          <li>komunikaciju između korisnika i profesionalaca</li>
+          <li>ostavljanje recenzija nakon usluge</li>
+        </ul>
 
-Platforma je posrednička digitalna usluga između korisnika i profesionalaca.
+        <h2 className="text-2xl font-semibold pt-4">
+          2. Tko može koristiti Platformu
+        </h2>
 
-2. Tko može koristiti Platformu
+        <p>
+          Platformu mogu koristiti punoljetne fizičke i pravne osobe.
+        </p>
 
-Platformu mogu koristiti punoljetne fizičke i pravne osobe koje mogu sklapati pravno obvezujuće odnose.
+        <p>
+          Profesionalac koji otvara profil jamči da ima pravo obavljati ponuđene usluge
+          i da su uneseni podaci točni i ažurni.
+        </p>
 
-Profesionalac koji otvara profil jamči da:
+        <h2 className="text-2xl font-semibold pt-4">
+          3. Profesionalni računi
+        </h2>
 
-ima pravo obavljati ponuđene usluge
-su svi uneseni podaci točni, potpuni i ažurni
-posluje u skladu s važećim zakonima Republike Hrvatske
-3. Profesionalni računi
+        <ul className="list-disc pl-6 space-y-1">
+          <li>točnost podataka o sebi ili poslovnom subjektu</li>
+          <li>zakonitost usluga koje nudi</li>
+          <li>ažuriranje cijena i dostupnosti</li>
+          <li>sigurnost pristupnih podataka</li>
+        </ul>
 
-Profesionalac je odgovoran za:
+        <p>
+          Zadržavamo pravo suspendirati ili ukloniti račun u slučaju zlouporabe ili kršenja pravila.
+        </p>
 
-točnost podataka o sebi, obrtu ili poslovnom subjektu
-zakonitost usluga koje nudi
-ažuriranje cijena, dostupnosti i opisa usluga
-sigurnost svojih pristupnih podataka
+        <h2 className="text-2xl font-semibold pt-4">
+          4. Rezervacije
+        </h2>
 
-Zadržavamo pravo suspendirati ili ukloniti profesionalni račun ako utvrdimo:
+        <p>
+          Korisnik može putem Platforme poslati zahtjev za rezervaciju usluge i termina.
+        </p>
 
-zlouporabu sustava
-netočne ili obmanjujuće podatke
-prijevarno postupanje
-kršenje ovih Uvjeta
-nezakonito korištenje Platforme
-4. Rezervacije
+        <p>
+          Rezervacija nije potvrđena dok profesionalac ne prihvati zahtjev
+          ili dok sustav ne prikaže potvrđeni status.
+        </p>
 
-Korisnik može putem Platforme poslati zahtjev za rezervaciju odabrane usluge i termina.
+        <h2 className="text-2xl font-semibold pt-4">
+          5. Cijene, pretplate i plaćanje
+        </h2>
 
-Slanjem zahtjeva za rezervaciju korisnik potvrđuje da su uneseni podaci točni.
+        <p>
+          Cijene određuje profesionalac, osim ako nije drugačije navedeno.
+        </p>
 
-Rezervacija nije konačno potvrđena dok profesionalac ne prihvati zahtjev ili dok Platforma ne prikaže potvrđeni status, ovisno o funkcionalnosti sustava.
+        <p>
+          Platforma može koristiti model pretplate za profesionalne korisnike.
+        </p>
 
-Profesionalac je odgovoran za pravovremeno prihvaćanje, odbijanje ili izvršenje rezervacije.
+        <p>
+          Plaćanja i pretplate obrađuju se putem Stripe platforme.
+        </p>
 
-5. Cijene, pretplate i plaćanje
+        <p>
+          Ne pohranjujemo potpune podatke o platnim karticama korisnika.
+        </p>
 
-Cijene usluga prikazane na Platformi određuje profesionalac, osim ako je drugačije navedeno.
+        <h2 className="text-2xl font-semibold pt-4">
+          6. Recenzije
+        </h2>
 
-Platforma može koristiti model pretplate za profesionalne korisnike.
+        <p>
+          Recenzije mogu ostavljati samo korisnici koji su imali dovršenu rezervaciju.
+        </p>
 
-Plaćanja i pretplate obrađuju se putem Stripe platforme. Korištenjem pretplate korisnik prihvaća i uvjete pružatelja usluge Stripe.
+        <ul className="list-disc pl-6 space-y-1">
+          <li>zabranjene su lažne recenzije</li>
+          <li>nije dopušten govor mržnje ili uvredljiv sadržaj</li>
+          <li>nije dopuštena manipulacija ocjenama</li>
+        </ul>
 
-Ne pohranjujemo potpune podatke o platnim karticama korisnika.
+        <h2 className="text-2xl font-semibold pt-4">
+          7. Zabranjena uporaba
+        </h2>
 
-Zadržavamo pravo izmjene cijena, pretplata i poslovnog modela uz prethodnu objavu na Platformi.
+        <ul className="list-disc pl-6 space-y-1">
+          <li>nezakonito korištenje Platforme</li>
+          <li>unošenje lažnih podataka</li>
+          <li>pokušaj neovlaštenog pristupa sustavu</li>
+          <li>ometanje rada Platforme</li>
+          <li>zaobilaženje sigurnosnih mjera</li>
+        </ul>
 
-6. Recenzije
+        <h2 className="text-2xl font-semibold pt-4">
+          8. Dostupnost Platforme
+        </h2>
 
-Recenziju može ostaviti samo korisnik koji je imao dovršenu rezervaciju putem Platforme.
+        <p>
+          Nastojimo održavati Platformu dostupnom i funkcionalnom,
+          ali ne jamčimo neprekidan rad bez grešaka ili prekida.
+        </p>
 
-Nije dopušteno:
+        <h2 className="text-2xl font-semibold pt-4">
+          9. Ograničenje odgovornosti
+        </h2>
 
-ostavljanje lažnih ili obmanjujućih recenzija
-vrijeđanje, kleveta ili govor mržnje
-objava nezakonitog ili uvredljivog sadržaja
-manipuliranje ocjenama i reputacijom korisnika
+        <ul className="list-disc pl-6 space-y-1">
+          <li>ne jamčimo uspješno izvršenje svake rezervacije</li>
+          <li>ne odgovaramo za kvalitetu usluge profesionalca</li>
+          <li>ne odgovaramo za neizravnu štetu nastalu korištenjem Platforme</li>
+        </ul>
 
-Zadržavamo pravo ukloniti recenzije koje krše ove Uvjete ili važeće propise.
+        <h2 className="text-2xl font-semibold pt-4">
+          10. Intelektualno vlasništvo
+        </h2>
 
-7. Zabranjena uporaba
+        <p>
+          Sav sadržaj Platforme pripada nama ili našim licencodavcima,
+          osim sadržaja korisnika.
+        </p>
 
-Nije dopušteno:
+        <h2 className="text-2xl font-semibold pt-4">
+          11. Privatnost
+        </h2>
 
-koristiti Platformu za nezakonite svrhe
-unositi netočne ili tuđe podatke bez ovlaštenja
-pokušavati neovlašten pristup sustavu
-ometati rad Platforme
-automatizirano napadati sustav ili zaobilaziti sigurnosne mjere
-objavljivati sadržaj koji je uvredljiv, štetan ili nezakonit
-8. Dostupnost Platforme
+        <p>
+          Obrada osobnih podataka uređena je Pravilima privatnosti Platforme.
+        </p>
 
-Nastojimo održavati Platformu dostupnom i funkcionalnom, ali ne jamčimo neprekidan rad bez grešaka, prekida ili kašnjenja.
+        <h2 className="text-2xl font-semibold pt-4">
+          12. Prestanak korištenja
+        </h2>
 
-Možemo privremeno obustaviti rad Platforme radi:
+        <p>
+          Možemo ograničiti ili ukinuti pristup Platformi korisniku
+          koji krši pravila ili zakon.
+        </p>
 
-održavanja
-nadogradnji
-sigurnosti
-tehničkih problema
-drugih opravdanih razloga
-9. Ograničenje odgovornosti
+        <h2 className="text-2xl font-semibold pt-4">
+          13. Izmjene Uvjeta
+        </h2>
 
-U najvećoj mjeri dopuštenoj zakonom:
+        <p>
+          Zadržavamo pravo izmjene ovih Uvjeta u bilo kojem trenutku.
+        </p>
 
-ne jamčimo da će svaka rezervacija biti prihvaćena ili uspješno izvršena
-ne odgovaramo za kvalitetu, zakonitost ili ishod usluge koju pruža profesionalac
-ne odgovaramo za neizravnu, slučajnu ili posljedičnu štetu nastalu korištenjem Platforme
+        <h2 className="text-2xl font-semibold pt-4">
+          14. Mjerodavno pravo i nadležnost
+        </h2>
 
-Profesionalac i korisnik odgovorni su za svoj međusobni odnos, komunikaciju i izvršenje dogovorene usluge.
+        <p>
+          Primjenjuje se pravo Republike Hrvatske i Europske unije kada je primjenjivo.
+        </p>
 
-10. Intelektualno vlasništvo
+        <h2 className="text-2xl font-semibold pt-4">
+          15. Kontakt
+        </h2>
 
-Sav sadržaj Platforme, uključujući:
-
-naziv
-dizajn
-tekstove
-logotipe
-softver
-funkcionalnosti
-
-pripada nama ili našim licencodavcima, osim sadržaja koji objavljuju korisnici.
-
-Bez našeg pisanog odobrenja nije dopušteno kopirati, distribuirati, mijenjati ili komercijalno koristiti sadržaj Platforme.
-
-11. Privatnost
-
-Obrada osobnih podataka uređena je našim Pravilima privatnosti, koja su sastavni dio ovih Uvjeta korištenja.
-
-12. Prestanak korištenja
-
-Možemo ograničiti, suspendirati ili ukinuti pristup Platformi korisniku ili profesionalcu koji:
-
-krši ove Uvjete
-krši zakon
-ugrožava sigurnost sustava
-zloupotrebljava Platformu
-
-Korisnik može prestati koristiti Platformu u bilo kojem trenutku.
-
-13. Izmjene Uvjeta
-
-Zadržavamo pravo izmijeniti ove Uvjete u bilo kojem trenutku.
-
-Ažurirana verzija bit će objavljena na Platformi uz novi datum ažuriranja.
-
-14. Mjerodavno pravo i nadležnost
-
-Na ove Uvjete primjenjuje se pravo Republike Hrvatske i pravo Europske unije kada je primjenjivo.
-
-Za sporove koji se ne mogu riješiti mirnim putem nadležan je stvarno nadležni sud u Republici Hrvatskoj, osim ako prisilni propisi određuju drugačije.
-
-15. Kontakt
-
-Za sva pitanja u vezi ovih Uvjeta kontaktirajte nas na:
-
-support@solvix.hr
+        <p>
+          support@solvix.hr
+        </p>
+      </div>
+    </div>
+  );
+}
+```
