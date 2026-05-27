@@ -250,10 +250,10 @@ const LandingPage = () => {
               <Link to="/registracija" className="text-sm font-semibold text-slate-300 hover:text-white transition-colors duration-300">
                 Postani majstor
               </Link>
-              <Link to="/terms" className="text-sm font-semibold text-slate-300 hover:text-white transition-colors duration-300">
+              <Link to="/uvjeti-koristenja" className="text-sm font-semibold text-slate-300 hover:text-white transition-colors duration-300">
                 Uvjeti korištenja
               </Link>
-              <Link to="/privacy" className="text-sm font-semibold text-slate-300 hover:text-white transition-colors duration-300">
+              <Link to="/politika-privatnosti" className="text-sm font-semibold text-slate-300 hover:text-white transition-colors duration-300">
                 Politika privatnosti
               </Link>
             </div>
