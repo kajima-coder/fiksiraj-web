@@ -34,7 +34,7 @@ const RegisterPage = () => {
       newErrors.name = 'Ime i prezime je obavezno';
     }
     if (!formData.companyName.trim()) {
-      newErrors.companyName = 'Naziv firme je obavezan';
+      newErrors.companyName = 'Naziv firme ili obrta je obavezan';
     }
     if (!formData.email.trim()) {
       newErrors.email = 'Email je obavezan';
@@ -115,7 +115,7 @@ const RegisterPage = () => {
 
               {/* Naziv firme - NEW Required field */}
               <div className="sm:col-span-2">
-                <RequiredLabel htmlFor="companyName">Naziv firme</RequiredLabel>
+                <RequiredLabel htmlFor="companyName">Naziv firme ili obrta</RequiredLabel>
                 <div className="relative">
                   <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                   <Input
@@ -128,7 +128,7 @@ const RegisterPage = () => {
                       if (errors.companyName) setErrors({ ...errors, companyName: '' });
                     }}
                     className={`form-input pl-12 ${errors.companyName ? 'border-red-500' : ''}`}
-                    placeholder="Naziv vaše firme ili obrta"
+                    placeholder="Unesite naziv firme ili obrta"
                     data-testid="register-company-input"
                   />
                 </div>

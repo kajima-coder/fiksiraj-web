@@ -134,7 +134,7 @@ const WorkingHoursPage = () => {
                 className={`day-row ${workingHours[day.key].enabled ? 'day-row-active' : ''}`}
                 data-testid={`day-${day.key}`}
               >
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex flex-col gap-4">
                   {/* Day Toggle */}
                   <div className="flex items-center gap-4">
                     <Switch
@@ -156,29 +156,29 @@ const WorkingHoursPage = () => {
                     </div>
                   </div>
 
-                  {/* Time Inputs */}
+                  {/* Time Inputs - Stacked on mobile, inline on larger screens */}
                   {workingHours[day.key].enabled && (
-                    <div className="flex items-center gap-4 sm:gap-6 ml-14 sm:ml-0">
-                      <div className="flex items-center gap-2">
-                        <Label htmlFor={`${day.key}-start`} className="text-xs font-black text-slate-400 uppercase tracking-wider">Od</Label>
+                    <div className="flex flex-col xs:flex-row items-start xs:items-center gap-3 xs:gap-4 sm:gap-6 pl-0 xs:pl-14">
+                      <div className="flex items-center gap-2 w-full xs:w-auto">
+                        <Label htmlFor={`${day.key}-start`} className="text-xs font-black text-slate-400 uppercase tracking-wider min-w-[24px]">Od</Label>
                         <Input
                           id={`${day.key}-start`}
                           type="time"
                           value={workingHours[day.key].start_time || ''}
                           onChange={(e) => handleWorkingHoursChange(day.key, 'start_time', e.target.value)}
-                          className="w-28 sm:w-32 form-input text-center font-semibold"
+                          className="flex-1 xs:flex-none xs:w-28 sm:w-32 form-input text-center font-semibold"
                           data-testid={`${day.key}-start-time`}
                         />
                       </div>
-                      <div className="w-4 h-0.5 bg-slate-200 rounded-full"></div>
-                      <div className="flex items-center gap-2">
-                        <Label htmlFor={`${day.key}-end`} className="text-xs font-black text-slate-400 uppercase tracking-wider">Do</Label>
+                      <div className="hidden xs:block w-4 h-0.5 bg-slate-200 rounded-full"></div>
+                      <div className="flex items-center gap-2 w-full xs:w-auto">
+                        <Label htmlFor={`${day.key}-end`} className="text-xs font-black text-slate-400 uppercase tracking-wider min-w-[24px]">Do</Label>
                         <Input
                           id={`${day.key}-end`}
                           type="time"
                           value={workingHours[day.key].end_time || ''}
                           onChange={(e) => handleWorkingHoursChange(day.key, 'end_time', e.target.value)}
-                          className="w-28 sm:w-32 form-input text-center font-semibold"
+                          className="flex-1 xs:flex-none xs:w-28 sm:w-32 form-input text-center font-semibold"
                           data-testid={`${day.key}-end-time`}
                         />
                       </div>
