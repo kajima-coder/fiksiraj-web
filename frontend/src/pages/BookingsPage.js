@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
-import { Button } from '@/components/ui/button';
+import MobileBottomNav from '@/components/MobileBottomNav';
+import UserAvatar from '@/components/UserAvatar';
 import { Calendar, CheckCircle, XCircle, Clock, User, Phone, Euro, Trash2, FileText, Briefcase } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'sonner';
@@ -76,249 +77,188 @@ const BookingsPage = () => {
     return b.status === filter;
   });
 
+  const filterTabs = [
+    { key: 'all', label: 'Sve' },
+    { key: 'pending', label: 'Na čekanju' },
+    { key: 'confirmed', label: 'Potvrđene' },
+    { key: 'cancelled', label: 'Otkazane' },
+    { key: 'completed', label: 'Završene' },
+  ];
+
   return (
-    <div className="min-h-screen app-background">
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="page-container">
-        {/* Page Header */}
-        <div className="mb-12 sm:mb-16">
-          <h1 className="section-title mb-4" data-testid="bookings-title">
-            Rezervacije
-          </h1>
-          <p className="section-subtitle">Pregledajte i upravljajte svim rezervacijama</p>
-        </div>
-
-        {/* Filter Tabs - Modern Pills */}
-        <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 mb-10 sm:mb-12">
-          <div className="flex gap-2 sm:gap-3 min-w-max sm:min-w-0 sm:flex-wrap pb-2 sm:pb-0">
-            <button
-              onClick={() => setFilter('all')}
-              className={`filter-btn whitespace-nowrap ${filter === 'all' ? 'filter-btn-active' : 'filter-btn-inactive'}`}
-              data-testid="filter-all"
-            >
-              Sve
-            </button>
-            <button
-              onClick={() => setFilter('pending')}
-              className={`filter-btn whitespace-nowrap ${filter === 'pending' ? 'filter-btn-active' : 'filter-btn-inactive'}`}
-              data-testid="filter-pending"
-            >
-              Na čekanju
-            </button>
-            <button
-              onClick={() => setFilter('confirmed')}
-              className={`filter-btn whitespace-nowrap ${filter === 'confirmed' ? 'filter-btn-active' : 'filter-btn-inactive'}`}
-              data-testid="filter-confirmed"
-            >
-              Potvrđene
-            </button>
-            <button
-              onClick={() => setFilter('cancelled')}
-              className={`filter-btn whitespace-nowrap ${filter === 'cancelled' ? 'filter-btn-active' : 'filter-btn-inactive'}`}
-              data-testid="filter-cancelled"
-            >
-              Otkazane
-            </button>
-            <button
-              onClick={() => setFilter('completed')}
-              className={`filter-btn whitespace-nowrap ${filter === 'completed' ? 'filter-btn-active' : 'filter-btn-inactive'}`}
-              data-testid="filter-completed"
-            >
-              Završene
-            </button>
+      
+      <div className="pt-20 sm:pt-24">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+          {/* Page Header */}
+          <div className="mb-8 sm:mb-12">
+            <h1 className="mp-page-title" data-testid="bookings-title">Rezervacije</h1>
+            <p className="text-base text-gray-500">Pregledajte i upravljajte svim rezervacijama</p>
           </div>
-        </div>
 
-        {/* Booking Cards */}
-        <div className="space-y-6 sm:space-y-8">
-          {filteredBookings.length === 0 ? (
-            <div className="card-elevated p-12 sm:p-20 text-center">
-              <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Calendar className="w-10 h-10 text-slate-300" />
-              </div>
-              <p className="text-xl text-slate-400 font-medium" data-testid="no-bookings-message">
-                {filter === 'all' 
-                  ? 'Nemate nijednu rezervaciju.' 
-                  : filter === 'pending'
-                  ? 'Nemate nijednu rezervaciju na čekanju.'
-                  : filter === 'confirmed'
-                  ? 'Nemate nijednu potvrđenu rezervaciju.'
-                  : filter === 'cancelled'
-                  ? 'Nemate nijednu otkazanu rezervaciju.'
-                  : 'Nemate nijednu završenu rezervaciju.'}
-              </p>
-              <p className="text-sm text-slate-300 mt-2">Podijelite svoj link da biste dobili prve klijente!</p>
-            </div>
-          ) : (
-            filteredBookings.map((booking) => (
-              <div
-                key={booking.id}
-                className="booking-card"
-                data-testid="booking-card"
+          {/* Filter Tabs */}
+          <div className="mp-filter-tabs">
+            {filterTabs.map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setFilter(tab.key)}
+                className={`mp-filter-tab ${filter === tab.key ? 'mp-filter-tab-active' : ''}`}
+                data-testid={`filter-${tab.key}`}
               >
-                {/* Card Header - Service & Status */}
-                <div className="booking-header">
-                  <div className="flex flex-wrap items-center justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
-                        <Briefcase className="w-6 h-6 text-white" />
-                      </div>
-                      <div>
-                        <h3 className="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900" style={{fontFamily: "'Sora', sans-serif"}}>{booking.service_name}</h3>
-                        <p className="text-sm text-slate-400 mt-0.5">
-                          {format(new Date(booking.booking_datetime), 'PPP', { locale: hr })}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      {/* Price Tag - Prominent */}
-                      <div className="price-tag">
-                        <Euro className="w-5 h-5" />
-                        <span>{booking.service_price.toFixed(2)} EUR</span>
-                      </div>
-                      {/* Status Badge */}
-                      {booking.status === 'pending' && (
-                        <span className="status-badge status-pending">
-                          <Clock className="w-3.5 h-3.5 mr-1.5" />
-                          Na čekanju
-                        </span>
-                      )}
-                      {booking.status === 'confirmed' && (
-                        <span className="status-badge status-confirmed">
-                          <CheckCircle className="w-3.5 h-3.5 mr-1.5" />
-                          Potvrđeno
-                        </span>
-                      )}
-                      {booking.status === 'cancelled' && (
-                        <span className="status-badge status-cancelled">
-                          <XCircle className="w-3.5 h-3.5 mr-1.5" />
-                          Otkazano
-                        </span>
-                      )}
-                      {booking.status === 'completed' && (
-                        <span className="status-badge status-completed">
-                          <CheckCircle className="w-3.5 h-3.5 mr-1.5" />
-                          Završeno
-                        </span>
-                      )}
-                    </div>
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Booking Cards */}
+          <div className="space-y-5">
+            {filteredBookings.length === 0 ? (
+              <div className="mp-info-card">
+                <div className="mp-empty-state" style={{ padding: '48px 24px' }}>
+                  <div className="mp-empty-icon" style={{ width: '80px', height: '80px', marginBottom: '20px' }}>
+                    <Calendar style={{ width: '36px', height: '36px' }} />
                   </div>
+                  <h3 className="mp-empty-title" style={{ fontSize: '20px' }} data-testid="no-bookings-message">
+                    {filter === 'all' 
+                      ? 'Nemate nijednu rezervaciju' 
+                      : filter === 'pending'
+                      ? 'Nemate rezervacija na čekanju'
+                      : filter === 'confirmed'
+                      ? 'Nemate potvrđenih rezervacija'
+                      : filter === 'cancelled'
+                      ? 'Nemate otkazanih rezervacija'
+                      : 'Nemate završenih rezervacija'}
+                  </h3>
+                  <p className="mp-empty-text" style={{ fontSize: '14px', marginBottom: '0' }}>
+                    Podijelite svoj link da biste dobili prve klijente!
+                  </p>
                 </div>
-
-                {/* Card Body - Client & Details */}
-                <div className="booking-body">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                    {/* Client Info */}
-                    <div className="flex items-center gap-4 p-4 bg-slate-50/80 rounded-2xl">
-                      <div className="w-11 h-11 bg-gradient-to-br from-slate-200 to-slate-300 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <User className="w-5 h-5 text-slate-600" />
+              </div>
+            ) : (
+              filteredBookings.map((booking) => (
+                <div
+                  key={booking.id}
+                  className="mp-booking-card"
+                  data-testid="booking-card"
+                >
+                  {/* Header */}
+                  <div className="mp-booking-header">
+                    <div className="mp-booking-date">
+                      <div className="mp-booking-date-icon">
+                        <Briefcase />
                       </div>
-                      <div className="min-w-0">
-                        <p className="text-xs font-black text-slate-400 uppercase tracking-wider mb-1">Klijent</p>
-                        <p className="text-base font-bold text-slate-900 truncate">{booking.client_name}</p>
-                      </div>
-                    </div>
-
-                    {/* Phone */}
-                    <div className="flex items-center gap-4 p-4 bg-slate-50/80 rounded-2xl">
-                      <div className="w-11 h-11 bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <Phone className="w-5 h-5 text-emerald-600" />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-xs font-black text-slate-400 uppercase tracking-wider mb-1">Telefon</p>
-                        <p className="text-base font-medium text-slate-700">{booking.client_phone}</p>
+                      <div className="mp-booking-date-text">
+                        <h4>{booking.service_name}</h4>
+                        <p>{format(new Date(booking.booking_datetime), 'PPP', { locale: hr })}</p>
                       </div>
                     </div>
 
-                    {/* Time */}
-                    <div className="flex items-center gap-4 p-4 bg-slate-50/80 rounded-2xl">
-                      <div className="w-11 h-11 bg-gradient-to-br from-violet-100 to-violet-200 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <Clock className="w-5 h-5 text-violet-600" />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-xs font-black text-slate-400 uppercase tracking-wider mb-1">Vrijeme</p>
-                        <p className="text-base font-medium text-slate-700">
-                          {format(new Date(booking.booking_datetime), 'HH:mm')} • {booking.service_duration} min
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Date */}
-                    <div className="flex items-center gap-4 p-4 bg-slate-50/80 rounded-2xl">
-                      <div className="w-11 h-11 bg-gradient-to-br from-amber-100 to-amber-200 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <Calendar className="w-5 h-5 text-amber-600" />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-xs font-black text-slate-400 uppercase tracking-wider mb-1">Datum</p>
-                        <p className="text-base font-medium text-slate-700">
-                          {format(new Date(booking.booking_datetime), 'EEEE', { locale: hr })}
-                        </p>
-                      </div>
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <span className="bg-black text-white px-4 py-2 rounded-full text-sm font-bold">
+                        {booking.service_price.toFixed(2)} EUR
+                      </span>
+                      <span className={`mp-booking-status ${
+                        booking.status === 'pending' ? 'mp-booking-status-pending' :
+                        booking.status === 'confirmed' ? 'mp-booking-status-confirmed' :
+                        booking.status === 'cancelled' ? 'mp-booking-status-cancelled' :
+                        'mp-booking-status-completed'
+                      }`}>
+                        {booking.status === 'pending' && 'Na čekanju'}
+                        {booking.status === 'confirmed' && 'Potvrđeno'}
+                        {booking.status === 'cancelled' && 'Otkazano'}
+                        {booking.status === 'completed' && 'Završeno'}
+                      </span>
                     </div>
                   </div>
 
-                  {/* Description Box - Prominent */}
-                  {booking.description && (
-                    <div className="description-box mt-6">
-                      <div className="flex items-center gap-2 mb-3">
-                        <FileText className="w-5 h-5 text-emerald-600" />
-                        <p className="text-sm font-black text-emerald-700 uppercase tracking-wider">Opis problema</p>
+                  {/* Body */}
+                  <div className="mp-booking-body">
+                    <div className="mp-booking-client">
+                      <UserAvatar name={booking.client_name} size="lg" />
+                      <div className="mp-booking-client-info">
+                        <h4>{booking.client_name}</h4>
+                        <p>{booking.client_phone}</p>
                       </div>
-                      <p className="text-base text-slate-700 leading-relaxed">{booking.description}</p>
                     </div>
-                  )}
-                </div>
 
-                {/* Card Footer - Actions */}
-                <div className="booking-footer">
-                  <div className="flex flex-wrap items-center justify-end gap-3">
+                    <div className="mp-booking-service">
+                      <p className="mp-booking-service-title">Detalji rezervacije</p>
+                      <div className="mp-booking-service-meta">
+                        <div className="mp-booking-service-item">
+                          <Clock />
+                          <span>{format(new Date(booking.booking_datetime), 'HH:mm')} • {booking.service_duration} min</span>
+                        </div>
+                        <div className="mp-booking-service-item">
+                          <Calendar />
+                          <span>{format(new Date(booking.booking_datetime), 'EEEE', { locale: hr })}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Description */}
+                    {booking.description && (
+                      <div className="mt-4 p-4 bg-green-50 rounded-xl border-2 border-green-100">
+                        <div className="flex items-center gap-2 mb-2">
+                          <FileText className="w-4 h-4 text-green-600" />
+                          <p className="text-sm font-bold text-green-700 uppercase tracking-wider">Opis problema</p>
+                        </div>
+                        <p className="text-gray-700">{booking.description}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Footer */}
+                  <div className="mp-booking-footer">
                     {booking.status === 'pending' && (
                       <>
-                        <Button
+                        <button
                           onClick={() => handleConfirm(booking.id)}
-                          className="btn-success flex items-center gap-2"
+                          className="mp-btn-success"
                           data-testid="confirm-booking-button"
                         >
                           <CheckCircle className="w-4 h-4" />
-                          <span>Potvrdi</span>
-                        </Button>
-                        <Button
+                          Potvrdi
+                        </button>
+                        <button
                           onClick={() => handleCancel(booking.id)}
-                          className="btn-outline-danger flex items-center gap-2"
+                          className="mp-btn-danger-outline"
                           data-testid="cancel-booking-button"
                         >
                           <XCircle className="w-4 h-4" />
-                          <span>Otkaži</span>
-                        </Button>
+                          Otkaži
+                        </button>
                       </>
                     )}
                     {booking.status === 'confirmed' && (
-                      <Button
+                      <button
                         onClick={() => handleComplete(booking.id)}
-                        className="btn-primary flex items-center gap-2"
+                        className="mp-btn-primary"
                         data-testid="complete-booking-button"
                       >
                         <CheckCircle className="w-4 h-4" />
-                        <span>Označi završeno</span>
-                      </Button>
+                        Označi završeno
+                      </button>
                     )}
                     {(booking.status === 'completed' || booking.status === 'cancelled') && (
-                      <Button
+                      <button
                         onClick={() => handleDelete(booking.id, booking.status)}
-                        className="btn-outline-danger flex items-center gap-2"
+                        className="mp-btn-danger-outline"
                         data-testid="delete-booking-button"
                       >
                         <Trash2 className="w-4 h-4" />
-                        <span>Ukloni</span>
-                      </Button>
+                        Ukloni
+                      </button>
                     )}
                   </div>
                 </div>
-              </div>
-            ))
-          )}
+              ))
+            )}
+          </div>
         </div>
       </div>
+
+      <MobileBottomNav />
     </div>
   );
 };

@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Star, MapPin, Euro } from 'lucide-react';
+import { Star, MapPin, Search, Filter, ArrowRight } from 'lucide-react';
 import axios from 'axios';
 import { PROFESSIONS } from '@/constants';
 
@@ -13,6 +10,7 @@ const SearchResultsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [professionals, setProfessionals] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
     profession: searchParams.get('profession') || '',
     city: searchParams.get('city') || '',
@@ -50,174 +48,242 @@ const SearchResultsPage = () => {
     if (filters.profession) params.set('profession', filters.profession);
     if (filters.city) params.set('city', filters.city);
     setSearchParams(params);
+    setShowFilters(false);
   };
 
   const clearFilters = () => {
     setFilters({ profession: '', city: '' });
     setSearchParams({});
+    setShowFilters(false);
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <nav className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
+    <div className="min-h-screen bg-gray-50">
+      {/* Premium Navbar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-18 py-4">
-            <Link to="/" className="text-2xl font-extrabold text-primary tracking-tight">
+          <div className="flex justify-between items-center h-16 sm:h-20">
+            <Link to="/" className="text-2xl sm:text-3xl font-bold text-black tracking-tight" style={{fontFamily: "'Sora', sans-serif"}}>
               Fiksiraj
             </Link>
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <Link to="/prijava">
-                <Button variant="ghost" className="text-slate-600 font-semibold rounded-xl px-5 py-2.5">
+                <button className="px-4 sm:px-6 py-2.5 text-sm font-semibold text-gray-600 hover:text-black transition-colors">
                   Prijava
-                </Button>
+                </button>
               </Link>
               <Link to="/registracija">
-                <Button className="btn-primary">
+                <button className="mp-btn-primary text-sm px-5 sm:px-7 py-2.5">
                   Registracija
-                </Button>
+                </button>
               </Link>
             </div>
           </div>
         </div>
       </nav>
 
-      <div className="page-container">
-        <div className="flex flex-col lg:flex-row gap-10">
-          <aside className="lg:w-80 flex-shrink-0">
-            <div className="card-base p-8 sticky top-28">
-              <h2 className="text-xl font-bold tracking-tight mb-8">Filteri</h2>
-              
-              <div className="space-y-6">
-                <div>
-                  <Label htmlFor="filter-profession" className="text-sm font-bold text-slate-700 mb-3 block">Zanimanje</Label>
-                  <select
-                    id="filter-profession"
-                    value={filters.profession}
-                    onChange={(e) => handleFilterChange('profession', e.target.value)}
-                    className="w-full bg-white border-2 border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl h-12 px-4 text-sm font-medium"
-                    data-testid="filter-profession-select"
-                  >
-                    <option value="">Sva zanimanja</option>
-                    {PROFESSIONS.map((prof) => (
-                      <option key={prof} value={prof}>{prof}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <Label htmlFor="filter-city" className="text-sm font-bold text-slate-700 mb-3 block">Grad</Label>
-                  <Input
-                    id="filter-city"
-                    type="text"
-                    placeholder="Npr. Zagreb"
-                    value={filters.city}
-                    onChange={(e) => handleFilterChange('city', e.target.value)}
-                    className="w-full h-12 rounded-xl border-2"
-                    data-testid="filter-city-input"
-                  />
-                </div>
-
-                <div className="flex flex-col gap-3 pt-4">
-                  <Button
-                    onClick={applyFilters}
-                    className="btn-primary w-full"
-                    data-testid="apply-filters-button"
-                  >
-                    Primijeni filtere
-                  </Button>
-                  <Button
-                    onClick={clearFilters}
-                    variant="outline"
-                    className="w-full font-semibold rounded-xl py-3 hover:bg-slate-50"
-                    data-testid="clear-filters-button"
-                  >
-                    Obriši filtere
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </aside>
-
-          <main className="flex-1">
-            <div className="mb-10">
-              <h1 className="section-title mb-3" data-testid="search-results-title">
+      <div className="pt-20 sm:pt-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+          {/* Header with Filter Toggle */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 sm:mb-12">
+            <div>
+              <h1 className="mp-page-title" data-testid="search-results-title">
                 Rezultati pretrage
               </h1>
-              <p className="section-subtitle">
+              <p className="text-base text-gray-500">
                 Pronađeno {professionals.length} {professionals.length === 1 ? 'majstor' : 'majstora'}
               </p>
             </div>
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="mp-btn-secondary sm:hidden"
+            >
+              <Filter className="w-5 h-5" />
+              Filteri
+            </button>
+          </div>
 
-            {loading ? (
-              <div className="text-center py-20">
-                <div className="inline-block animate-spin rounded-full h-10 w-10 border-4 border-primary border-t-transparent mb-4"></div>
-                <p className="text-base text-slate-500">Učitavanje...</p>
-              </div>
-            ) : professionals.length === 0 ? (
-              <div className="card-base p-16 text-center">
-                <Star className="w-14 h-14 text-slate-300 mx-auto mb-5" />
-                <p className="text-xl text-slate-600 mb-6" data-testid="no-results-message">
-                  Nema rezultata za vašu pretragu.
-                </p>
-                <Button onClick={clearFilters} className="btn-secondary">
-                  Obriši filtere
-                </Button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                {professionals.map((prof) => (
-                  <div
-                    key={prof.slug}
-                    className="professional-card group"
-                    data-testid="professional-card"
-                  >
-                    <div className="flex flex-col h-full">
-                      <div className="flex items-start justify-between mb-4">
-                        <div>
-                          <h3 className="text-2xl font-bold tracking-tight text-slate-900 group-hover:text-primary transition-colors duration-300">{prof.name}</h3>
-                          <p className="text-base font-semibold text-primary mt-1">{prof.profession}</p>
-                        </div>
-                        <div className="flex items-center gap-1.5 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-full">
-                          <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
-                          <span className="text-sm font-bold text-amber-700">{prof.rating.toFixed(1)}</span>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center gap-2 text-sm text-slate-500 mb-4">
-                        <MapPin className="w-4 h-4" />
-                        <span>{prof.city}</span>
-                        <span className="text-slate-300">•</span>
-                        <span>{prof.review_count} recenzija</span>
-                      </div>
-                      
-                      {prof.bio && (
-                        <p className="text-sm text-slate-500 mb-5 line-clamp-2 flex-grow">{prof.bio}</p>
-                      )}
-                      
-                      <div className="flex items-center justify-between pt-5 border-t border-slate-100 mt-auto">
-                        {prof.starting_price > 0 ? (
-                          <div className="flex items-center gap-1.5 text-primary">
-                            <Euro className="w-5 h-5" />
-                            <span className="text-lg font-bold">Od {prof.starting_price.toFixed(2)} EUR</span>
-                          </div>
-                        ) : (
-                          <div></div>
-                        )}
-                        <Link to={`/majstor/${prof.slug}`}>
-                          <Button
-                            className="btn-primary"
-                            data-testid="book-professional-button"
-                          >
-                            Zakaži termin
-                          </Button>
-                        </Link>
-                      </div>
-                    </div>
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Sidebar Filters - Desktop */}
+            <aside className="hidden lg:block lg:w-80 flex-shrink-0">
+              <div className="mp-info-card sticky top-28" style={{ padding: '28px' }}>
+                <h2 className="text-lg font-bold text-gray-900 mb-6" style={{fontFamily: "'Sora', sans-serif"}}>Filteri</h2>
+                
+                <div className="space-y-5">
+                  <div>
+                    <label className="mp-form-label">Zanimanje</label>
+                    <select
+                      value={filters.profession}
+                      onChange={(e) => handleFilterChange('profession', e.target.value)}
+                      className="mp-form-input w-full cursor-pointer"
+                      data-testid="filter-profession-select"
+                    >
+                      <option value="">Sva zanimanja</option>
+                      {PROFESSIONS.map((prof) => (
+                        <option key={prof} value={prof}>{prof}</option>
+                      ))}
+                    </select>
                   </div>
-                ))}
+
+                  <div>
+                    <label className="mp-form-label">Grad</label>
+                    <input
+                      type="text"
+                      placeholder="Npr. Zagreb"
+                      value={filters.city}
+                      onChange={(e) => handleFilterChange('city', e.target.value)}
+                      className="mp-form-input w-full"
+                      data-testid="filter-city-input"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-3 pt-4">
+                    <button
+                      onClick={applyFilters}
+                      className="mp-btn-primary w-full"
+                      data-testid="apply-filters-button"
+                    >
+                      Primijeni filtere
+                    </button>
+                    <button
+                      onClick={clearFilters}
+                      className="mp-btn-secondary w-full"
+                      data-testid="clear-filters-button"
+                    >
+                      Obriši filtere
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+            {/* Mobile Filters Dropdown */}
+            {showFilters && (
+              <div className="lg:hidden mp-info-card mb-6" style={{ padding: '24px' }}>
+                <div className="space-y-4">
+                  <div>
+                    <label className="mp-form-label">Zanimanje</label>
+                    <select
+                      value={filters.profession}
+                      onChange={(e) => handleFilterChange('profession', e.target.value)}
+                      className="mp-form-input w-full cursor-pointer"
+                    >
+                      <option value="">Sva zanimanja</option>
+                      {PROFESSIONS.map((prof) => (
+                        <option key={prof} value={prof}>{prof}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="mp-form-label">Grad</label>
+                    <input
+                      type="text"
+                      placeholder="Npr. Zagreb"
+                      value={filters.city}
+                      onChange={(e) => handleFilterChange('city', e.target.value)}
+                      className="mp-form-input w-full"
+                    />
+                  </div>
+
+                  <div className="flex gap-3 pt-2">
+                    <button
+                      onClick={applyFilters}
+                      className="mp-btn-primary flex-1"
+                    >
+                      Primijeni
+                    </button>
+                    <button
+                      onClick={clearFilters}
+                      className="mp-btn-secondary flex-1"
+                    >
+                      Obriši
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
-          </main>
+
+            {/* Results Grid */}
+            <main className="flex-1">
+              {loading ? (
+                <div className="text-center py-20">
+                  <div className="inline-block animate-spin rounded-full h-10 w-10 border-4 border-black border-t-transparent mb-4"></div>
+                  <p className="text-base text-gray-500">Učitavanje...</p>
+                </div>
+              ) : professionals.length === 0 ? (
+                <div className="mp-empty-state">
+                  <div className="mp-empty-icon">
+                    <Search />
+                  </div>
+                  <h3 className="mp-empty-title" data-testid="no-results-message">Nema rezultata</h3>
+                  <p className="mp-empty-text">
+                    Nema majstora koji odgovaraju vašoj pretrazi. Pokušajte s drugim filterima.
+                  </p>
+                  <button onClick={clearFilters} className="mp-btn-secondary">
+                    Obriši filtere
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {professionals.map((prof) => (
+                    <Link
+                      key={prof.slug}
+                      to={`/majstor/${prof.slug}`}
+                      className="mp-professional-card"
+                      data-testid="professional-card"
+                    >
+                      {/* Card Image Area */}
+                      <div className="mp-card-image">
+                        <div className="mp-card-image-placeholder">
+                          {prof.name.charAt(0)}
+                        </div>
+                        {/* Rating Badge */}
+                        <div className="mp-card-badge">
+                          <Star />
+                          <span>{prof.rating.toFixed(1)}</span>
+                        </div>
+                      </div>
+
+                      {/* Card Content */}
+                      <div className="mp-card-content">
+                        <h3 className="mp-card-title">{prof.name}</h3>
+                        <p className="mp-card-subtitle">{prof.profession}</p>
+                        
+                        <div className="mp-card-location">
+                          <MapPin />
+                          <span>{prof.city}</span>
+                        </div>
+
+                        {prof.bio && (
+                          <p className="text-sm text-gray-500 line-clamp-2 mb-4">{prof.bio}</p>
+                        )}
+
+                        <div className="mp-card-footer">
+                          <span className="mp-card-reviews">{prof.review_count} recenzija</span>
+                          <div className="flex items-center gap-3">
+                            {prof.starting_price > 0 && (
+                              <span className="mp-card-price">
+                                <span>Od </span>{prof.starting_price.toFixed(2)} EUR
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        <button
+                          className="mp-btn-primary w-full mt-4"
+                          data-testid="book-professional-button"
+                        >
+                          Zakaži termin
+                          <ArrowRight className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </main>
+          </div>
         </div>
       </div>
     </div>

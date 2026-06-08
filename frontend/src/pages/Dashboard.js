@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useSearchParams } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
+import MobileBottomNav from '@/components/MobileBottomNav';
 import OnboardingTour from '@/components/OnboardingTour';
-import { Calendar, Clock, CheckCircle, User, CreditCard, Loader2, AlertTriangle } from 'lucide-react';
+import UserAvatar from '@/components/UserAvatar';
+import { Calendar, Clock, CheckCircle, User, CreditCard, Loader2, AlertTriangle, Link as LinkIcon, Copy } from 'lucide-react';
 import { toast } from 'sonner';
 import axios from 'axios';
 import { format } from 'date-fns';
@@ -31,7 +33,6 @@ const Dashboard = () => {
     fetchSubscriptionStatus();
     checkOnboardingStatus();
     
-    // Check if returning from Stripe
     const subscriptionParam = searchParams.get('subscription');
     const sessionId = searchParams.get('session_id');
     
@@ -86,7 +87,6 @@ const Dashboard = () => {
     try {
       const response = await axios.get(`${API}/checkout-status/${sessionId}`);
       
-      // For trial: status will be 'complete' but payment_status may be 'no_payment_required'
       if (response.data.status === 'complete') {
         toast.success('Pretplata je uspješno aktivirana! Imate 30 dana besplatnog probnog perioda.');
         fetchSubscriptionStatus();
@@ -98,7 +98,6 @@ const Dashboard = () => {
         return;
       }
 
-      // Continue polling
       setTimeout(() => pollPaymentStatus(sessionId, attempts + 1), pollInterval);
     } catch (error) {
       console.error('Error polling payment status:', error);
@@ -159,15 +158,13 @@ const Dashboard = () => {
     toast.success('Link kopiran!');
   };
 
-  // Check if subscription is blocked (past_due, unpaid, canceled)
   const isSubscriptionBlocked = subscriptionStatus?.subscription_status && 
     ['past_due', 'unpaid', 'canceled'].includes(subscriptionStatus.subscription_status);
 
   return (
-    <div className="min-h-screen app-background">
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
       
-      {/* Onboarding Tour */}
       {showOnboarding && (
         <OnboardingTour onComplete={handleOnboardingComplete} />
       )}
@@ -176,15 +173,15 @@ const Dashboard = () => {
       {isSubscriptionBlocked && (
         <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 text-center">
-            <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="w-16 h-16 bg-amber-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
               <AlertTriangle className="w-8 h-8 text-amber-600" />
             </div>
-            <h2 className="text-2xl font-bold text-slate-900 mb-3">
+            <h2 className="text-2xl font-bold text-gray-900 mb-3" style={{fontFamily: "'Sora', sans-serif"}}>
               {subscriptionStatus.subscription_status === 'past_due' && 'Plaćanje kasni'}
               {subscriptionStatus.subscription_status === 'unpaid' && 'Vaš probni period je istekao'}
               {subscriptionStatus.subscription_status === 'canceled' && 'Pretplata otkazana'}
             </h2>
-            <p className="text-base text-slate-600 mb-6">
+            <p className="text-base text-gray-600 mb-6">
               {subscriptionStatus.subscription_status === 'unpaid' 
                 ? 'Za nastavak korištenja potrebno je aktivirati pretplatu.'
                 : 'Za nastavak korištenja Fiksiraj platforme potrebno je obnoviti pretplatu.'}
@@ -192,7 +189,7 @@ const Dashboard = () => {
             <button
               onClick={handleActivateSubscription}
               disabled={subscriptionLoading}
-              className="btn-primary w-full flex items-center justify-center gap-2"
+              className="mp-btn-primary w-full"
               data-testid="renew-subscription-button"
             >
               {subscriptionLoading ? (
@@ -208,113 +205,157 @@ const Dashboard = () => {
         </div>
       )}
       
-      <div className="page-container">
-        <div className="mb-12 sm:mb-16">
-          <h1 className="section-title mb-4" data-testid="dashboard-title">
-            Dobro došli, {user?.name}
-          </h1>
-          <p className="section-subtitle">Pregled vaših rezervacija i statistika</p>
-        </div>
-
-        {/* Public Link Card */}
-        <div className="card-elevated mb-12">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center">
-              <Calendar className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <p className="text-sm font-black text-slate-700 uppercase tracking-wider">Vaš javni link</p>
-              <p className="text-xs text-slate-400">Podijelite s klijentima za direktne rezervacije</p>
-            </div>
-          </div>
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-            <input
-              type="text"
-              value={publicLink}
-              readOnly
-              className="flex-1 bg-slate-50/80 border-2 border-slate-200 rounded-2xl px-6 py-4 text-sm text-slate-700 font-medium"
-              data-testid="public-link-input"
-            />
-            <button
-              onClick={handleCopyLink}
-              className="btn-primary whitespace-nowrap"
-              data-testid="copy-link-button"
-            >
-              Kopiraj link
-            </button>
-          </div>
-        </div>
-
-        {/* Subscription Card */}
-        <div className="card-elevated mb-12">
-          <div className="flex items-center gap-3 mb-6">
-            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
-              subscriptionStatus?.has_subscription 
-                ? 'bg-gradient-to-br from-emerald-500 to-green-600' 
-                : subscriptionStatus?.subscription_status 
-                  ? 'bg-gradient-to-br from-amber-500 to-orange-600' 
-                  : 'bg-gradient-to-br from-slate-400 to-slate-500'
-            }`}>
-              <CreditCard className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <p className="text-sm font-black text-slate-700 uppercase tracking-wider">Premium pretplata</p>
-              <p className="text-xs text-slate-400">
-                {subscriptionStatus?.subscription_status === 'trialing' 
-                  ? '30 dana besplatnog probnog perioda' 
-                  : 'Aktivirajte sve premium značajke'}
-              </p>
-            </div>
-          </div>
-          
-          {subscriptionStatus?.has_subscription ? (
-            <div className={`flex items-center gap-3 p-4 rounded-2xl ${
-              subscriptionStatus?.subscription_status === 'trialing'
-                ? 'bg-blue-50 border-2 border-blue-200'
-                : 'bg-emerald-50 border-2 border-emerald-200'
-            }`}>
-              <CheckCircle className={`w-6 h-6 ${
-                subscriptionStatus?.subscription_status === 'trialing' ? 'text-blue-600' : 'text-emerald-600'
-              }`} />
-              <div>
-                <p className={`font-semibold ${
-                  subscriptionStatus?.subscription_status === 'trialing' ? 'text-blue-700' : 'text-emerald-700'
-                }`}>
-                  {subscriptionStatus?.subscription_status === 'trialing' 
-                    ? 'Probni period aktivan' 
-                    : 'Pretplata aktivna'}
-                </p>
-                <p className={`text-sm ${
-                  subscriptionStatus?.subscription_status === 'trialing' ? 'text-blue-600' : 'text-emerald-600'
-                }`}>
-                  {subscriptionStatus?.subscription_status === 'trialing'
-                    ? 'Imate pristup svim značajkama tijekom probnog perioda'
-                    : 'Uživate u svim premium značajkama'}
+      <div className="pt-20 sm:pt-24">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+          {/* Premium Hero Card */}
+          <div className="mp-hero-card mb-8">
+            <div className="flex items-center gap-4 sm:gap-5 relative z-10">
+              <UserAvatar name={user?.name} size="xl" className="shadow-xl border-2 border-white/20" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-white/60 mb-1">Dobrodošli natrag</p>
+                <h1 className="text-xl sm:text-2xl font-bold text-white truncate" style={{fontFamily: "'Sora', sans-serif"}}>
+                  {user?.name}
+                </h1>
+                <p className="text-sm text-white/50 mt-1 hidden sm:block">
+                  {user?.profession} • {user?.city}
                 </p>
               </div>
             </div>
-          ) : subscriptionStatus?.subscription_status && !['trialing', 'active'].includes(subscriptionStatus.subscription_status) ? (
-            <div className="space-y-4">
-              <div className="flex items-center gap-3 p-4 bg-amber-50 border-2 border-amber-200 rounded-2xl">
-                <CreditCard className="w-6 h-6 text-amber-600" />
+            
+            {/* Quick Stats Row */}
+            <div className="grid grid-cols-3 gap-3 mt-6 relative z-10">
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 text-center">
+                <p className="text-2xl font-bold text-white">{stats.today}</p>
+                <p className="text-xs text-white/60 font-medium mt-1">Danas</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 text-center">
+                <p className="text-2xl font-bold text-white">{stats.pending}</p>
+                <p className="text-xs text-white/60 font-medium mt-1">Na čekanju</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 text-center">
+                <p className="text-2xl font-bold text-white">{stats.confirmed}</p>
+                <p className="text-xs text-white/60 font-medium mt-1">Potvrđeno</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Link Card */}
+          <div className="mp-quick-link-card">
+            <div className="mp-quick-link-header">
+              <div className="mp-quick-link-icon">
+                <LinkIcon />
+              </div>
+              <div>
+                <p className="mp-quick-link-title">Vaš javni link</p>
+                <p className="mp-quick-link-subtitle">Podijelite s klijentima za direktne rezervacije</p>
+              </div>
+            </div>
+            <div className="mp-quick-link-input-wrapper">
+              <input
+                type="text"
+                value={publicLink}
+                readOnly
+                className="mp-quick-link-input"
+                data-testid="public-link-input"
+              />
+              <button
+                onClick={handleCopyLink}
+                className="mp-quick-link-btn flex items-center gap-2"
+                data-testid="copy-link-button"
+              >
+                <Copy className="w-4 h-4" />
+                Kopiraj link
+              </button>
+            </div>
+          </div>
+
+          {/* Subscription Card */}
+          <div className="mp-subscription-card">
+            <div className="mp-subscription-header">
+              <div className={`mp-subscription-icon ${
+                subscriptionStatus?.has_subscription 
+                  ? 'mp-subscription-icon-active' 
+                  : subscriptionStatus?.subscription_status 
+                    ? 'mp-subscription-icon-warning' 
+                    : 'mp-subscription-icon-inactive'
+              }`}>
+                <CreditCard />
+              </div>
+              <div>
+                <p className="mp-subscription-title">Premium pretplata</p>
+                <p className="mp-subscription-subtitle">
+                  {subscriptionStatus?.subscription_status === 'trialing' 
+                    ? '30 dana besplatnog probnog perioda' 
+                    : 'Aktivirajte sve premium značajke'}
+                </p>
+              </div>
+            </div>
+            
+            {subscriptionStatus?.has_subscription ? (
+              <div className={`mp-subscription-status ${
+                subscriptionStatus?.subscription_status === 'trialing'
+                  ? 'mp-subscription-status-trial'
+                  : 'mp-subscription-status-active'
+              }`}>
+                <CheckCircle className="w-6 h-6 flex-shrink-0" />
                 <div>
-                  <p className="font-semibold text-amber-700">
-                    {subscriptionStatus.subscription_status === 'past_due' && 'Plaćanje kasni'}
-                    {subscriptionStatus.subscription_status === 'unpaid' && 'Neplaćeno'}
-                    {subscriptionStatus.subscription_status === 'canceled' && 'Pretplata otkazana'}
+                  <p className="font-semibold">
+                    {subscriptionStatus?.subscription_status === 'trialing' 
+                      ? 'Probni period aktivan' 
+                      : 'Pretplata aktivna'}
                   </p>
-                  <p className="text-sm text-amber-600">Molimo obnovite pretplatu za pristup svim značajkama</p>
+                  <p className="text-sm mt-0.5">
+                    {subscriptionStatus?.subscription_status === 'trialing'
+                      ? 'Imate pristup svim značajkama tijekom probnog perioda'
+                      : 'Uživate u svim premium značajkama'}
+                  </p>
                 </div>
               </div>
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+            ) : subscriptionStatus?.subscription_status && !['trialing', 'active'].includes(subscriptionStatus.subscription_status) ? (
+              <div className="space-y-4">
+                <div className="mp-subscription-status mp-subscription-status-warning">
+                  <CreditCard className="w-6 h-6 flex-shrink-0" />
+                  <div>
+                    <p className="font-semibold">
+                      {subscriptionStatus.subscription_status === 'past_due' && 'Plaćanje kasni'}
+                      {subscriptionStatus.subscription_status === 'unpaid' && 'Neplaćeno'}
+                      {subscriptionStatus.subscription_status === 'canceled' && 'Pretplata otkazana'}
+                    </p>
+                    <p className="text-sm">Molimo obnovite pretplatu za pristup svim značajkama</p>
+                  </div>
+                </div>
+                <div className="mp-subscription-price">
+                  <div>
+                    <p className="mp-subscription-price-value">€10<span className="mp-subscription-price-period">/mjesečno</span></p>
+                    <p className="mp-subscription-price-trial">30 dana besplatnog probnog perioda</p>
+                  </div>
+                  <button
+                    onClick={handleActivateSubscription}
+                    disabled={subscriptionLoading}
+                    className="mp-btn-primary"
+                    data-testid="activate-subscription-button"
+                  >
+                    {subscriptionLoading ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Učitavanje...
+                      </>
+                    ) : (
+                      'Obnovi pretplatu'
+                    )}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="mp-subscription-price">
                 <div>
-                  <p className="text-2xl font-bold text-slate-800">€10<span className="text-base font-normal text-slate-500">/mjesečno</span></p>
-                  <p className="text-sm text-slate-500">30 dana besplatnog probnog perioda</p>
+                  <p className="mp-subscription-price-value">€10<span className="mp-subscription-price-period">/mjesečno</span></p>
+                  <p className="mp-subscription-price-trial">30 dana besplatnog probnog perioda</p>
                 </div>
                 <button
                   onClick={handleActivateSubscription}
                   disabled={subscriptionLoading}
-                  className="btn-primary whitespace-nowrap flex items-center justify-center gap-2"
+                  className="mp-btn-primary"
                   data-testid="activate-subscription-button"
                 >
                   {subscriptionLoading ? (
@@ -323,159 +364,111 @@ const Dashboard = () => {
                       Učitavanje...
                     </>
                   ) : (
-                    'Obnovi pretplatu'
+                    'Aktiviraj pretplatu'
                   )}
                 </button>
               </div>
-            </div>
-          ) : (
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-              <div>
-                <p className="text-2xl font-bold text-slate-800">€10<span className="text-base font-normal text-slate-500">/mjesečno</span></p>
-                <p className="text-sm text-slate-500">30 dana besplatnog probnog perioda</p>
-              </div>
-              <button
-                onClick={handleActivateSubscription}
-                disabled={subscriptionLoading}
-                className="btn-primary whitespace-nowrap flex items-center justify-center gap-2"
-                data-testid="activate-subscription-button"
-              >
-                {subscriptionLoading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Učitavanje...
-                  </>
-                ) : (
-                  'Aktiviraj pretplatu'
-                )}
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Stat Cards - Dramatic Visual Difference */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-12 sm:mb-16">
-          {/* Today - Blue */}
-          <div className="stat-card stat-card-blue group">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-xs font-black text-blue-600 uppercase tracking-wider mb-1">Danas</p>
-                <p className="text-xs text-slate-400 hidden sm:block">Današnje rezervacije</p>
-              </div>
-              <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform">
-                <Calendar className="w-7 h-7 text-white" strokeWidth={2.5} />
-              </div>
-            </div>
-            <p className="text-5xl sm:text-6xl font-bold text-blue-600 mt-auto" style={{fontFamily: "'Inter', sans-serif", letterSpacing: '-0.02em'}} data-testid="stat-today">{stats.today}</p>
-          </div>
-
-          {/* Pending - Amber - MORE PROMINENT */}
-          <div className="stat-card stat-card-amber group relative">
-            {stats.pending > 0 && (
-              <div className="absolute top-3 right-3 w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center animate-pulse">
-                <span className="text-xs font-black text-white">!</span>
-              </div>
             )}
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-xs font-black text-amber-600 uppercase tracking-wider mb-1">Na čekanju</p>
-                <p className="text-xs text-slate-400 hidden sm:block">Čekaju potvrdu</p>
-              </div>
-              <div className="w-14 h-14 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg shadow-amber-500/30 group-hover:scale-110 transition-transform">
-                <Clock className="w-7 h-7 text-white" strokeWidth={2.5} />
-              </div>
-            </div>
-            <p className="text-5xl sm:text-6xl font-bold text-amber-600 mt-auto" style={{fontFamily: "'Inter', sans-serif", letterSpacing: '-0.02em'}} data-testid="stat-pending">{stats.pending}</p>
           </div>
 
-          {/* Confirmed - Emerald */}
-          <div className="stat-card stat-card-emerald group">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-xs font-black text-emerald-600 uppercase tracking-wider mb-1">Potvrđene</p>
-                <p className="text-xs text-slate-400 hidden sm:block">Spremne za rad</p>
+          {/* Stats Grid - Modern Product Metrics */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div className="bg-white rounded-2xl p-5 border border-gray-100">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Danas</span>
+                <span className="w-2 h-2 rounded-full bg-blue-500"></span>
               </div>
-              <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/30 group-hover:scale-110 transition-transform">
-                <CheckCircle className="w-7 h-7 text-white" strokeWidth={2.5} />
-              </div>
+              <p className="text-4xl font-bold text-gray-900 tracking-tight" data-testid="stat-today" style={{fontFamily: "'Sora', sans-serif"}}>{stats.today}</p>
+              <p className="text-sm text-gray-400 mt-1">rezervacija</p>
             </div>
-            <p className="text-5xl sm:text-6xl font-bold text-emerald-600 mt-auto" style={{fontFamily: "'Inter', sans-serif", letterSpacing: '-0.02em'}} data-testid="stat-confirmed">{stats.confirmed}</p>
+
+            <div className="bg-white rounded-2xl p-5 border border-gray-100">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Na čekanju</span>
+                <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+              </div>
+              <p className="text-4xl font-bold text-gray-900 tracking-tight" data-testid="stat-pending" style={{fontFamily: "'Sora', sans-serif"}}>{stats.pending}</p>
+              <p className="text-sm text-gray-400 mt-1">za potvrdu</p>
+            </div>
+
+            <div className="bg-white rounded-2xl p-5 border border-gray-100">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Potvrđene</span>
+                <span className="w-2 h-2 rounded-full bg-green-500"></span>
+              </div>
+              <p className="text-4xl font-bold text-gray-900 tracking-tight" data-testid="stat-confirmed" style={{fontFamily: "'Sora', sans-serif"}}>{stats.confirmed}</p>
+              <p className="text-sm text-gray-400 mt-1">aktivnih</p>
+            </div>
+
+            <div className="bg-white rounded-2xl p-5 border border-gray-100">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Ukupno</span>
+                <span className="w-2 h-2 rounded-full bg-gray-400"></span>
+              </div>
+              <p className="text-4xl font-bold text-gray-900 tracking-tight" data-testid="stat-total" style={{fontFamily: "'Sora', sans-serif"}}>{stats.total}</p>
+              <p className="text-sm text-gray-400 mt-1">svih vremena</p>
+            </div>
           </div>
 
-          {/* Total - Slate */}
-          <div className="stat-card stat-card-slate group">
-            <div className="flex items-start justify-between">
+          {/* Upcoming Reservations */}
+          <div className="mp-info-card" style={{ padding: '28px' }}>
+            <div className="mp-section-header mb-6">
               <div>
-                <p className="text-xs font-black text-slate-600 uppercase tracking-wider mb-1">Ukupno</p>
-                <p className="text-xs text-slate-400 hidden sm:block">Sve rezervacije</p>
-              </div>
-              <div className="w-14 h-14 bg-gradient-to-br from-slate-500 to-slate-700 rounded-2xl flex items-center justify-center shadow-lg shadow-slate-500/30 group-hover:scale-110 transition-transform">
-                <Calendar className="w-7 h-7 text-white" strokeWidth={2.5} />
+                <h2 className="mp-section-title">Nadolazeće rezervacije</h2>
+                <p className="mp-section-subtitle">Sljedećih 5 rezervacija</p>
               </div>
             </div>
-            <p className="text-5xl sm:text-6xl font-bold text-slate-800 mt-auto" style={{fontFamily: "'Inter', sans-serif", letterSpacing: '-0.02em'}} data-testid="stat-total">{stats.total}</p>
-          </div>
-        </div>
 
-        {/* Upcoming Reservations */}
-        <div className="card-elevated">
-          <div className="flex items-center gap-4 mb-8">
-            <div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-violet-500/30">
-              <Calendar className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight" style={{fontFamily: "'Sora', sans-serif"}}>Nadolazeće rezervacije</h2>
-              <p className="text-sm text-slate-400">Sljedećih 5 rezervacija</p>
-            </div>
-          </div>
-          {bookings.length === 0 ? (
-            <div className="text-center py-16 sm:py-20">
-              <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Calendar className="w-10 h-10 text-slate-300" />
+            {bookings.length === 0 ? (
+              <div className="mp-empty-state" style={{ padding: '48px 24px' }}>
+                <div className="mp-empty-icon" style={{ width: '80px', height: '80px', marginBottom: '20px' }}>
+                  <Calendar style={{ width: '36px', height: '36px' }} />
+                </div>
+                <h3 className="mp-empty-title" style={{ fontSize: '20px' }} data-testid="no-bookings-message">
+                  Nemate nijednu rezervaciju
+                </h3>
+                <p className="mp-empty-text" style={{ fontSize: '14px', marginBottom: '0' }}>
+                  Podijelite svoj link da biste dobili prve klijente!
+                </p>
               </div>
-              <p className="text-xl text-slate-400 font-medium" data-testid="no-bookings-message">
-                Nemate nijednu rezervaciju.
-              </p>
-              <p className="text-sm text-slate-300 mt-2">Podijelite svoj link da biste dobili prve klijente!</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {bookings.slice(0, 5).map((booking) => (
-                <div
-                  key={booking.id}
-                  className="bg-white/60 backdrop-blur-sm rounded-2xl p-5 sm:p-6 border-2 border-slate-100 hover:border-primary/20 hover:shadow-lg transition-all duration-300"
-                  data-testid="booking-item"
-                >
-                  <div className="flex items-start sm:items-center justify-between gap-4">
+            ) : (
+              <div className="space-y-4">
+                {bookings.slice(0, 5).map((booking) => (
+                  <div
+                    key={booking.id}
+                    className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors"
+                    data-testid="booking-item"
+                  >
+                    <UserAvatar name={booking.client_name} size="md" />
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-2">
-                        <User className="w-5 h-5 text-primary flex-shrink-0" />
-                        <p className="font-black text-lg sm:text-xl text-slate-900 truncate">{booking.client_name}</p>
-                      </div>
-                      <p className="text-base text-primary font-bold mb-2">{booking.service_name}</p>
-                      <p className="text-sm text-slate-400 flex items-center gap-2">
-                        <Calendar className="w-4 h-4 flex-shrink-0" />
-                        <span className="truncate">{format(new Date(booking.booking_datetime), 'PPP p', { locale: hr })}</span>
+                      <p className="font-bold text-gray-900 truncate">{booking.client_name}</p>
+                      <p className="text-sm text-blue-600 font-semibold">{booking.service_name}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {format(new Date(booking.booking_datetime), 'PPP p', { locale: hr })}
                       </p>
                     </div>
                     <div className="flex-shrink-0">
-                      {booking.status === 'pending' && (
-                        <span className="status-badge status-pending">Na čekanju</span>
-                      )}
-                      {booking.status === 'confirmed' && (
-                        <span className="status-badge status-confirmed">Potvrđeno</span>
-                      )}
-                      {booking.status === 'cancelled' && (
-                        <span className="status-badge status-cancelled">Otkazano</span>
-                      )}
+                      <span className={`mp-booking-status ${
+                        booking.status === 'pending' ? 'mp-booking-status-pending' :
+                        booking.status === 'confirmed' ? 'mp-booking-status-confirmed' :
+                        booking.status === 'cancelled' ? 'mp-booking-status-cancelled' :
+                        'mp-booking-status-completed'
+                      }`}>
+                        {booking.status === 'pending' && 'Na čekanju'}
+                        {booking.status === 'confirmed' && 'Potvrđeno'}
+                        {booking.status === 'cancelled' && 'Otkazano'}
+                        {booking.status === 'completed' && 'Završeno'}
+                      </span>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
+
+      <MobileBottomNav />
     </div>
   );
 };

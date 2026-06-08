@@ -33,7 +33,9 @@ function App() {
             <Route path="/resetiraj-lozinku/:token" element={<ResetPasswordPage />} />
             <Route path="/ocijeni/:bookingId/:token" element={<ReviewPage />} />
             <Route path="/politika-privatnosti" element={<PrivacyPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/uvjeti-koristenja" element={<TermsPage />} />
+            <Route path="/terms" element={<TermsPage />} />
             <Route
               path="/dashboard"
               element={

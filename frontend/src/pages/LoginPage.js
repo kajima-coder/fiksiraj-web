@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { getErrorMessage } from '@/utils/errorUtils';
@@ -33,54 +30,53 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen app-background flex items-center justify-center px-4 py-12">
-      <div className="max-w-md w-full">
+    <div className="mp-auth-container">
+      <div className="mp-auth-card">
         {/* Logo & Header */}
-        <div className="text-center mb-10">
-          <Link to="/" className="inline-block">
-            <h1 className="text-5xl font-bold text-primary tracking-tight mb-3 hover:scale-105 transition-transform" style={{fontFamily: "'Sora', sans-serif"}}>Fiksiraj</h1>
+        <div className="mp-auth-logo">
+          <Link to="/">
+            <h1 className="hover:opacity-80 transition-opacity cursor-pointer">Fiksiraj</h1>
           </Link>
-          <p className="text-lg text-slate-400 font-medium">Prijavite se na svoj račun</p>
+          <p>Prijavite se na svoj račun</p>
         </div>
 
         {/* Login Card */}
-        <div className="hero-card">
+        <div className="mp-auth-form-card">
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <Label htmlFor="email" className="form-label">Email</Label>
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                <Input
-                  id="email"
+            <div className="mp-form-group">
+              <label className="mp-form-label">Email</label>
+              <div className="mp-form-input-icon">
+                <Mail />
+                <input
                   type="email"
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="form-input pl-12"
+                  className="mp-form-input"
                   placeholder="ivan@example.com"
                   data-testid="login-email-input"
                 />
               </div>
             </div>
 
-            <div>
-              <Label htmlFor="password" className="form-label">Lozinka</Label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                <Input
-                  id="password"
+            <div className="mp-form-group" style={{ marginBottom: 0 }}>
+              <label className="mp-form-label">Lozinka</label>
+              <div className="mp-form-input-icon relative">
+                <Lock />
+                <input
                   type={showPassword ? "text" : "password"}
                   required
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="form-input pl-12 pr-12"
+                  className="mp-form-input"
+                  style={{ paddingRight: '52px' }}
                   placeholder="••••••••"
                   data-testid="login-password-input"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                   data-testid="login-toggle-password-visibility"
                 >
                   {showPassword ? (
@@ -92,9 +88,9 @@ const LoginPage = () => {
               </div>
             </div>
 
-            <Button
+            <button
               type="submit"
-              className="btn-primary w-full flex items-center justify-center gap-2"
+              className="mp-btn-primary w-full"
               disabled={loading}
               data-testid="login-submit-button"
             >
@@ -106,19 +102,19 @@ const LoginPage = () => {
                   <ArrowRight className="w-5 h-5" />
                 </>
               )}
-            </Button>
+            </button>
           </form>
 
           <div className="mt-6 text-center">
-            <Link to="/zaboravili-lozinku" className="text-sm text-primary font-bold hover:underline transition-all" data-testid="forgot-password-link">
+            <Link to="/zaboravili-lozinku" className="text-sm text-blue-600 font-semibold hover:underline" data-testid="forgot-password-link">
               Zaboravili ste lozinku?
             </Link>
           </div>
 
-          <div className="mt-8 pt-6 border-t border-slate-100 text-center">
-            <p className="text-sm text-slate-500">
+          <div className="mp-auth-footer">
+            <p>
               Nemate račun?{' '}
-              <Link to="/registracija" className="text-primary font-bold hover:underline" data-testid="register-link">
+              <Link to="/registracija" data-testid="register-link">
                 Registrirajte se
               </Link>
             </p>

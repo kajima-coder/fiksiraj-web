@@ -1,14 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Calendar } from '@/components/ui/calendar';
-import { CheckCircle, Phone, Clock, Euro, Star, FileText, MapPin, ArrowLeft, User, Mail, Sparkles, CalendarDays } from 'lucide-react';
+import { CheckCircle, Phone, Clock, Euro, Star, FileText, MapPin, ArrowLeft, User, Mail, CalendarDays, Sparkles } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'sonner';
-import { format, addDays } from 'date-fns';
+import { format } from 'date-fns';
 import { hr } from 'date-fns/locale';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -96,23 +92,23 @@ const PublicBookingPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen app-background flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (!professional) {
     return (
-      <div className="min-h-screen app-background flex items-center justify-center px-4">
-        <div className="hero-card text-center max-w-md">
-          <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <User className="w-8 h-8 text-slate-300" />
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+        <div className="mp-info-card text-center max-w-md" style={{ padding: '48px 32px' }}>
+          <div className="mp-empty-icon mx-auto" style={{ width: '80px', height: '80px', marginBottom: '24px' }}>
+            <User style={{ width: '36px', height: '36px' }} />
           </div>
-          <h1 className="text-2xl font-semibold text-slate-900 mb-2" style={{fontFamily: "'Sora', sans-serif"}}>Profesionalac nije pronađen</h1>
-          <p className="text-base text-slate-500 mb-6">Provjerite link i pokušajte ponovo.</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-3" style={{fontFamily: "'Sora', sans-serif"}}>Profesionalac nije pronađen</h1>
+          <p className="text-base text-gray-500 mb-6">Provjerite link i pokušajte ponovo.</p>
           <Link to="/">
-            <Button className="btn-primary">Natrag na početnu</Button>
+            <button className="mp-btn-primary">Natrag na početnu</button>
           </Link>
         </div>
       </div>
@@ -122,7 +118,6 @@ const PublicBookingPage = () => {
   // Success Screen
   if (bookingStep === 4 && booking) {
     const handleNewBooking = () => {
-      // Reset all booking state
       setSelectedService(null);
       setSelectedSlot(null);
       setClientName('');
@@ -134,77 +129,69 @@ const PublicBookingPage = () => {
     };
 
     return (
-      <div className="min-h-screen app-background flex items-center justify-center px-4 py-12">
-        <div className="hero-card max-w-md w-full text-center relative overflow-hidden">
-          {/* Success gradient accent */}
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600"></div>
-          
-          <div className="w-20 h-20 bg-gradient-to-br from-emerald-400 to-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-500/30">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
+        <div className="mp-info-card max-w-md w-full text-center" style={{ padding: '40px 32px' }}>
+          <div className="w-20 h-20 bg-green-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-green-500/30">
             <CheckCircle className="w-10 h-10 text-white" strokeWidth={2.5} />
           </div>
-          <h1 className="text-3xl font-semibold tracking-tight mb-3" style={{fontFamily: "'Sora', sans-serif"}} data-testid="booking-success-title">
+          <h1 className="text-3xl font-bold text-gray-900 mb-3" style={{fontFamily: "'Sora', sans-serif"}} data-testid="booking-success-title">
             Rezervacija uspješna!
           </h1>
-          <p className="section-subtitle mb-6">
+          <p className="text-gray-500 mb-6">
             Vaša rezervacija je poslana. Majstor će je uskoro potvrditi.
           </p>
-          <div className="bg-gradient-to-r from-blue-50 to-primary/5 border border-blue-200/50 rounded-2xl p-4 mb-6">
-            <p className="text-sm text-blue-800 font-medium flex items-center justify-center gap-2">
-              <Mail className="w-4 h-4" />
-              Biti ćete obaviješteni e-mailom kada majstor prihvati ili odbije rezervaciju.
-            </p>
+          
+          <div className="bg-blue-50 rounded-xl p-4 mb-6 flex items-center justify-center gap-2">
+            <Mail className="w-4 h-4 text-blue-600" />
+            <span className="text-sm text-blue-700 font-medium">Biti ćete obaviješteni e-mailom kada majstor prihvati ili odbije rezervaciju.</span>
           </div>
           
           {/* Booking Summary */}
-          <div className="bg-slate-50 border-2 border-slate-100 rounded-2xl p-6 text-left space-y-4 mb-6">
+          <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 text-left space-y-4 mb-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary/20 to-blue-200 rounded-xl flex items-center justify-center">
-                <Clock className="w-5 h-5 text-primary" />
+              <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-blue-600" />
               </div>
               <div>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Usluga</p>
-                <p className="text-base font-bold text-slate-900">{booking.service_name}</p>
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Usluga</p>
+                <p className="text-base font-bold text-gray-900">{booking.service_name}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-violet-100 to-violet-200 rounded-xl flex items-center justify-center">
-                <CalendarDays className="w-5 h-5 text-violet-600" />
+              <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
+                <CalendarDays className="w-5 h-5 text-purple-600" />
               </div>
               <div>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Datum i vrijeme</p>
-                <p className="text-base font-medium text-slate-700">
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Datum i vrijeme</p>
+                <p className="text-base font-medium text-gray-700">
                   {format(new Date(booking.booking_datetime), 'PPP p', { locale: hr })}
                 </p>
               </div>
             </div>
-            <div className="pt-4 border-t border-slate-200 flex items-center justify-between">
-              <span className="status-badge status-pending">Na čekanju potvrde</span>
-              <span className="price-tag">{booking.service_price.toFixed(2)} EUR</span>
+            <div className="pt-4 border-t border-gray-200 flex items-center justify-between">
+              <span className="mp-booking-status mp-booking-status-pending">Na čekanju</span>
+              <span className="bg-black text-white px-4 py-2 rounded-full text-sm font-bold">{booking.service_price.toFixed(2)} EUR</span>
             </div>
           </div>
           
-          <p className="text-sm text-slate-500 flex items-center justify-center gap-2 mb-8">
+          <p className="text-sm text-gray-500 flex items-center justify-center gap-2 mb-8">
             <Phone className="w-4 h-4" />
             {professional.phone}
           </p>
 
-          {/* Navigation Buttons */}
           <div className="flex flex-col sm:flex-row gap-3">
             <Link to="/" className="flex-1">
-              <Button 
-                className="btn-primary w-full" 
-                data-testid="back-to-home-button"
-              >
+              <button className="mp-btn-primary w-full" data-testid="back-to-home-button">
                 Nazad na početnu
-              </Button>
+              </button>
             </Link>
-            <Button 
+            <button 
               onClick={handleNewBooking}
-              className="btn-secondary flex-1"
+              className="mp-btn-secondary flex-1"
               data-testid="new-booking-button"
             >
               Nova rezervacija
-            </Button>
+            </button>
           </div>
         </div>
       </div>
@@ -212,90 +199,81 @@ const PublicBookingPage = () => {
   }
 
   return (
-    <div className="min-h-screen app-background">
+    <div className="min-h-screen bg-gray-50">
       {/* Navbar */}
-      <nav className="bg-white/80 backdrop-blur-xl border-b border-slate-200/50 sticky top-0 z-50">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 sm:h-20">
-            <Link to="/" className="text-2xl sm:text-3xl font-bold text-primary tracking-tight hover:scale-105 transition-transform" style={{fontFamily: "'Sora', sans-serif"}}>
+            <Link to="/" className="text-2xl sm:text-3xl font-bold text-black tracking-tight hover:opacity-80 transition-opacity" style={{fontFamily: "'Sora', sans-serif"}}>
               Fiksiraj
             </Link>
           </div>
         </div>
       </nav>
 
-      <div className="page-container max-w-5xl">
-        {/* Professional Profile Card */}
-        <div className="card-elevated mb-10 relative overflow-hidden">
-          {/* Gradient accent */}
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-blue-500 to-violet-500"></div>
-          
-          <div className="flex flex-col sm:flex-row sm:items-start gap-6">
-            {/* Avatar */}
-            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-primary to-blue-600 rounded-3xl flex items-center justify-center shadow-lg shadow-primary/20 flex-shrink-0">
-              <span className="text-3xl sm:text-4xl font-black text-white">{professional.name.charAt(0)}</span>
-            </div>
-            
-            <div className="flex-1">
-              <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight mb-2" style={{fontFamily: "'Sora', sans-serif"}} data-testid="professional-name">
-                {professional.name}
-              </h1>
-              <p className="text-lg font-bold text-primary mb-1">{professional.profession}</p>
-              <p className="text-base text-slate-500 flex items-center gap-2 mb-4">
-                <MapPin className="w-4 h-4" />
-                {professional.city}
-              </p>
-              {professional.bio && (
-                <p className="text-base text-slate-600 leading-relaxed mb-5">{professional.bio}</p>
-              )}
-              <div className="flex flex-wrap items-center gap-4">
-                <div className="flex items-center gap-2 bg-gradient-to-r from-amber-50 to-amber-100 border border-amber-200 px-4 py-2 rounded-full">
-                  <Star className="w-5 h-5 text-amber-500 fill-amber-500" />
-                  <span className="font-black text-amber-700">{professional.rating.toFixed(1)}</span>
-                  <span className="text-sm text-amber-600">({professional.review_count} recenzija)</span>
-                </div>
-                <p className="text-base text-slate-600 flex items-center gap-2">
-                  <Phone className="w-4 h-4 text-slate-400" />
-                  <span className="font-medium">{professional.phone}</span>
-                </p>
-              </div>
-            </div>
-          </div>
+      {/* Professional Profile Header */}
+      <div className="mp-profile-header pt-20">
+        <div className="mp-profile-avatar">
+          {professional.name.charAt(0)}
         </div>
+        <h1 className="mp-profile-name" data-testid="professional-name">{professional.name}</h1>
+        <p className="mp-profile-profession">{professional.profession}</p>
+        
+        <div className="flex items-center justify-center gap-2 text-white/60 mb-4">
+          <MapPin className="w-4 h-4" />
+          <span>{professional.city}</span>
+        </div>
+        
+        <div className="mp-profile-rating">
+          <Star />
+          <span className="mp-profile-rating-score">{professional.rating.toFixed(1)}</span>
+          <span className="mp-profile-rating-count">({professional.review_count} recenzija)</span>
+        </div>
+      </div>
 
-        {/* Reviews Section */}
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Bio */}
+        {professional.bio && (
+          <div className="mp-info-card mb-6" style={{ padding: '24px' }}>
+            <p className="text-gray-700 leading-relaxed">{professional.bio}</p>
+            <p className="text-sm text-gray-500 mt-4 flex items-center gap-2">
+              <Phone className="w-4 h-4" />
+              {professional.phone}
+            </p>
+          </div>
+        )}
+
+        {/* Reviews */}
         {professional.reviews && professional.reviews.length > 0 && (
-          <div className="card-elevated mb-10">
-            <div className="flex items-center gap-4 mb-8">
-              <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg shadow-amber-500/20">
-                <Star className="w-6 h-6 text-white" />
+          <div className="mp-info-card mb-6" style={{ padding: '24px' }}>
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center">
+                <Star className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h2 className="text-2xl font-semibold tracking-tight" style={{fontFamily: "'Sora', sans-serif"}}>Recenzije</h2>
-                <p className="text-sm text-slate-400">{professional.review_count} ocjena od klijenata</p>
+                <h2 className="text-lg font-bold text-gray-900" style={{fontFamily: "'Sora', sans-serif"}}>Recenzije</h2>
+                <p className="text-sm text-gray-500">{professional.review_count} ocjena</p>
               </div>
             </div>
-            <div className="space-y-6">
+            <div className="space-y-4">
               {professional.reviews.map((review) => (
-                <div key={review.id} className="p-5 bg-slate-50/50 rounded-2xl border border-slate-100" data-testid="review-item">
-                  <div className="flex flex-wrap items-center gap-3 mb-3">
-                    <div className="flex items-center">
+                <div key={review.id} className="mp-review-item" data-testid="review-item">
+                  <div className="mp-review-header">
+                    <div className="mp-review-stars">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <Star
                           key={star}
-                          className={`w-4 h-4 ${
-                            star <= review.rating ? 'text-amber-500 fill-amber-500' : 'text-slate-200'
-                          }`}
+                          className={star <= review.rating ? 'text-amber-500 fill-amber-500' : 'text-gray-200'}
                         />
                       ))}
                     </div>
-                    <span className="text-sm font-bold text-slate-700">{review.client_name}</span>
-                    <span className="text-sm text-slate-400">
+                    <span className="mp-review-author">{review.client_name}</span>
+                    <span className="mp-review-date">
                       • {format(new Date(review.created_at), 'PP', { locale: hr })}
                     </span>
                   </div>
                   {review.comment && (
-                    <p className="text-base text-slate-600">{review.comment}</p>
+                    <p className="mp-review-text">{review.comment}</p>
                   )}
                 </div>
               ))}
@@ -305,39 +283,42 @@ const PublicBookingPage = () => {
 
         {/* Step 1: Select Service */}
         {bookingStep === 1 && (
-          <div className="card-elevated">
-            <div className="flex items-center gap-4 mb-8">
-              <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
-                <Sparkles className="w-6 h-6 text-white" />
+          <div className="mp-info-card" style={{ padding: '24px' }}>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h2 className="text-2xl font-semibold tracking-tight" style={{fontFamily: "'Sora', sans-serif"}}>Odaberite uslugu</h2>
-                <p className="text-sm text-slate-400">Korak 1 od 3</p>
+                <h2 className="text-lg font-bold text-gray-900" style={{fontFamily: "'Sora', sans-serif"}}>Odaberite uslugu</h2>
+                <p className="text-sm text-gray-500">Korak 1 od 3</p>
               </div>
             </div>
+
             {professional.services.length === 0 ? (
-              <div className="text-center py-16">
-                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Clock className="w-8 h-8 text-slate-300" />
+              <div className="mp-empty-state" style={{ padding: '32px 16px' }}>
+                <div className="mp-empty-icon" style={{ width: '64px', height: '64px', marginBottom: '16px' }}>
+                  <Clock style={{ width: '28px', height: '28px' }} />
                 </div>
-                <p className="text-lg text-slate-400 font-medium">Trenutno nema dostupnih usluga.</p>
+                <p className="text-gray-500">Trenutno nema dostupnih usluga.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className="space-y-3">
                 {professional.services.map((service) => (
                   <button
                     key={service.id}
                     onClick={() => handleServiceSelect(service)}
-                    className="group text-left p-6 bg-white/80 border-2 border-slate-100 rounded-3xl hover:border-primary/30 hover:shadow-xl transition-all duration-300"
+                    className="w-full text-left p-5 bg-gray-50 border-2 border-transparent rounded-xl hover:border-gray-200 hover:bg-white transition-all"
                     data-testid="service-option"
                   >
-                    <h3 className="text-xl font-semibold tracking-tight text-slate-900 mb-4 group-hover:text-primary transition-colors" style={{fontFamily: "'Sora', sans-serif"}}>{service.name}</h3>
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-slate-500">
-                        <Clock className="w-4 h-4" />
-                        <span className="text-sm font-medium">{service.duration_minutes} minuta</span>
+                      <div>
+                        <h3 className="text-lg font-bold text-gray-900 mb-1" style={{fontFamily: "'Sora', sans-serif"}}>{service.name}</h3>
+                        <div className="flex items-center gap-2 text-gray-500 text-sm">
+                          <Clock className="w-4 h-4" />
+                          <span>{service.duration_minutes} minuta</span>
+                        </div>
                       </div>
-                      <span className="price-tag">{service.price.toFixed(2)} EUR</span>
+                      <span className="bg-black text-white px-4 py-2 rounded-full text-sm font-bold">{service.price.toFixed(2)} EUR</span>
                     </div>
                   </button>
                 ))}
@@ -348,36 +329,34 @@ const PublicBookingPage = () => {
 
         {/* Step 2: Select Date & Time */}
         {bookingStep >= 2 && selectedService && (
-          <div className="card-elevated">
-            <div className="mb-6">
-              <button
-                onClick={() => {
-                  setBookingStep(1);
-                  setSelectedService(null);
-                  setSelectedSlot(null);
-                }}
-                className="text-sm text-primary hover:underline font-bold flex items-center gap-2"
-                data-testid="back-to-services"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Natrag na usluge
-              </button>
-            </div>
+          <div className="mp-info-card" style={{ padding: '24px' }}>
+            <button
+              onClick={() => {
+                setBookingStep(1);
+                setSelectedService(null);
+                setSelectedSlot(null);
+              }}
+              className="text-sm text-blue-600 hover:underline font-semibold flex items-center gap-2 mb-5"
+              data-testid="back-to-services"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Natrag na usluge
+            </button>
             
-            <div className="flex items-center gap-4 mb-8">
-              <div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-violet-500/20">
-                <CalendarDays className="w-6 h-6 text-white" />
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center">
+                <CalendarDays className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h2 className="text-2xl font-semibold tracking-tight" style={{fontFamily: "'Sora', sans-serif"}}>Odaberite termin</h2>
-                <p className="text-sm text-slate-400">Korak 2 od 3 • {selectedService.name}</p>
+                <h2 className="text-lg font-bold text-gray-900" style={{fontFamily: "'Sora', sans-serif"}}>Odaberite termin</h2>
+                <p className="text-sm text-gray-500">Korak 2 od 3 • {selectedService.name}</p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div>
-                <Label className="form-label mb-4 block">Odaberite datum</Label>
-                <div className="bg-white/80 rounded-2xl border-2 border-slate-100 p-4">
+                <p className="mp-form-label mb-3">Odaberite datum</p>
+                <div className="bg-white rounded-xl border border-gray-200 p-4">
                   <Calendar
                     mode="single"
                     selected={selectedDate}
@@ -390,24 +369,20 @@ const PublicBookingPage = () => {
               </div>
 
               <div>
-                <Label className="form-label mb-4 block">Dostupni termini</Label>
+                <p className="mp-form-label mb-3">Dostupni termini</p>
                 {availableSlots.length === 0 ? (
-                  <div className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl p-8 text-center" data-testid="no-slots-message">
-                    <Clock className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                    <p className="text-base text-slate-500 font-medium">Nema dostupnih termina za odabrani datum.</p>
-                    <p className="text-sm text-slate-400 mt-1">Pokušajte odabrati drugi datum.</p>
+                  <div className="bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl p-8 text-center" data-testid="no-slots-message">
+                    <Clock className="w-10 h-10 text-gray-300 mx-auto mb-3" />
+                    <p className="text-gray-500 font-medium">Nema dostupnih termina</p>
+                    <p className="text-sm text-gray-400 mt-1">Pokušajte odabrati drugi datum.</p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-[400px] overflow-y-auto p-1">
+                  <div className="mp-time-slots">
                     {availableSlots.map((slot) => (
                       <button
                         key={slot}
                         onClick={() => handleSlotSelect(slot)}
-                        className={`rounded-2xl p-3 text-sm font-bold transition-all duration-300 ${
-                          selectedSlot === slot
-                            ? 'bg-gradient-to-br from-primary to-blue-600 text-white shadow-lg shadow-primary/30 scale-105'
-                            : 'bg-white/80 text-slate-700 border-2 border-slate-100 hover:border-primary/30 hover:bg-primary/5'
-                        }`}
+                        className={`mp-time-slot ${selectedSlot === slot ? 'mp-time-slot-selected' : ''}`}
                         data-testid="time-slot"
                       >
                         {format(new Date(slot), 'HH:mm')}
@@ -422,126 +397,121 @@ const PublicBookingPage = () => {
 
         {/* Step 3: Client Details Form */}
         {bookingStep === 3 && selectedSlot && (
-          <div className="card-elevated mt-8 relative overflow-hidden">
-            {/* Gradient accent */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600"></div>
-            
-            <div className="bg-gradient-to-r from-blue-50 to-primary/5 border border-blue-200/50 rounded-2xl p-4 mb-8">
-              <p className="text-sm text-blue-800 font-medium text-center flex items-center justify-center gap-2">
-                <CheckCircle className="w-4 h-4 text-blue-600" />
-                Rezervacija ne zahtijeva registraciju. Unesite svoje podatke ispod.
-              </p>
+          <div className="mp-info-card mt-6" style={{ padding: '24px' }}>
+            <div className="bg-blue-50 rounded-xl p-4 mb-6 flex items-center justify-center gap-2">
+              <CheckCircle className="w-4 h-4 text-blue-600" />
+              <span className="text-sm text-blue-700 font-medium">Rezervacija ne zahtijeva registraciju. Unesite svoje podatke ispod.</span>
             </div>
             
-            <div className="flex items-center gap-4 mb-8">
-              <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
-                <User className="w-6 h-6 text-white" />
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-green-600 rounded-xl flex items-center justify-center">
+                <User className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h2 className="text-2xl font-semibold tracking-tight" style={{fontFamily: "'Sora', sans-serif"}}>Vaši podaci</h2>
-                <p className="text-sm text-slate-400">Korak 3 od 3 • Završite rezervaciju</p>
+                <h2 className="text-lg font-bold text-gray-900" style={{fontFamily: "'Sora', sans-serif"}}>Vaši podaci</h2>
+                <p className="text-sm text-gray-500">Korak 3 od 3 • Završite rezervaciju</p>
               </div>
             </div>
             
             <form onSubmit={handleSubmitBooking} className="space-y-5">
-              <div>
-                <Label htmlFor="client-name" className="form-label">
+              <div className="mp-form-group" style={{ marginBottom: '20px' }}>
+                <label className="mp-form-label">
                   Ime i prezime <span className="text-red-500">*</span>
-                </Label>
-                <div className="relative">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                  <Input
-                    id="client-name"
+                </label>
+                <div className="mp-form-input-icon">
+                  <User />
+                  <input
                     type="text"
                     required
                     value={clientName}
                     onChange={(e) => setClientName(e.target.value)}
                     placeholder="Marko Marković"
-                    className="form-input pl-12"
+                    className="mp-form-input"
                     data-testid="client-name-input"
                   />
                 </div>
               </div>
-              <div>
-                <Label htmlFor="client-phone" className="form-label">
+
+              <div className="mp-form-group" style={{ marginBottom: '20px' }}>
+                <label className="mp-form-label">
                   Telefon <span className="text-red-500">*</span>
-                </Label>
-                <div className="relative">
-                  <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                  <Input
-                    id="client-phone"
+                </label>
+                <div className="mp-form-input-icon">
+                  <Phone />
+                  <input
                     type="tel"
                     required
                     value={clientPhone}
                     onChange={(e) => setClientPhone(e.target.value)}
                     placeholder="+385 91 234 5678"
-                    className="form-input pl-12"
+                    className="mp-form-input"
                     data-testid="client-phone-input"
                   />
                 </div>
               </div>
-              <div>
-                <Label htmlFor="client-email" className="form-label">
+
+              <div className="mp-form-group" style={{ marginBottom: '20px' }}>
+                <label className="mp-form-label">
                   Email <span className="text-red-500">*</span>
-                </Label>
-                <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                  <Input
-                    id="client-email"
+                </label>
+                <div className="mp-form-input-icon">
+                  <Mail />
+                  <input
                     type="email"
                     required
                     value={clientEmail}
                     onChange={(e) => setClientEmail(e.target.value)}
                     placeholder="marko@example.com"
-                    className="form-input pl-12"
+                    className="mp-form-input"
                     data-testid="client-email-input"
                   />
                 </div>
-                <p className="text-xs text-slate-400 mt-2">
+                <p className="text-xs text-gray-400 mt-2">
                   Na ovu adresu ćete dobiti potvrdu rezervacije
                 </p>
               </div>
-              <div>
-                <Label htmlFor="description" className="form-label flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-slate-400" />
+
+              <div className="mp-form-group" style={{ marginBottom: '20px' }}>
+                <label className="mp-form-label flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-gray-400" />
                   Opišite problem (nije obavezno)
-                </Label>
-                <Textarea
-                  id="description"
+                </label>
+                <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Npr. Kada je pukla na rubu, treba popravak ili zamjena..."
-                  className="form-textarea min-h-[120px]"
+                  className="mp-form-input min-h-[120px] resize-none"
                   data-testid="description-input"
                 />
               </div>
               
               {/* Booking Summary */}
-              <div className="bg-slate-50 border-2 border-slate-100 rounded-2xl p-6 space-y-4">
-                <p className="text-xs font-black text-slate-400 uppercase tracking-wider mb-3">Sažetak rezervacije</p>
+              <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 space-y-4">
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Sažetak rezervacije</p>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-slate-600">Usluga:</span>
-                  <span className="text-sm font-bold text-slate-900">{selectedService.name}</span>
+                  <span className="text-sm text-gray-600">Usluga:</span>
+                  <span className="text-sm font-bold text-gray-900">{selectedService.name}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-slate-600">Datum i vrijeme:</span>
-                  <span className="text-sm font-bold text-slate-900">
+                  <span className="text-sm text-gray-600">Datum i vrijeme:</span>
+                  <span className="text-sm font-bold text-gray-900">
                     {format(new Date(selectedSlot), 'PPP p', { locale: hr })}
                   </span>
                 </div>
-                <div className="pt-4 border-t border-slate-200 flex items-center justify-between">
-                  <span className="text-base font-bold text-slate-700">Cijena:</span>
-                  <span className="price-tag text-lg">{selectedService.price.toFixed(2)} EUR</span>
+                <div className="pt-4 border-t border-gray-200 flex items-center justify-between">
+                  <span className="font-bold text-gray-700">Cijena:</span>
+                  <span className="bg-black text-white px-4 py-2 rounded-full text-base font-bold">{selectedService.price.toFixed(2)} EUR</span>
                 </div>
               </div>
               
-              <Button
+              <button
                 type="submit"
-                className="btn-success w-full py-4 text-base"
+                className="mp-btn-success w-full"
                 data-testid="submit-booking-button"
               >
+                <CheckCircle className="w-5 h-5" />
                 Potvrdi rezervaciju
-              </Button>
+              </button>
             </form>
           </div>
         )}

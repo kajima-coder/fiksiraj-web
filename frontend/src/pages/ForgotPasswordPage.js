@@ -1,11 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import axios from 'axios';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, Mail, ArrowLeft, ArrowRight } from 'lucide-react';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -30,67 +27,83 @@ const ForgotPasswordPage = () => {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
-        <div className="max-w-md w-full bg-white border border-slate-200 rounded-lg p-8 text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle className="w-8 h-8 text-green-600" strokeWidth={2} />
+      <div className="mp-auth-container">
+        <div className="mp-auth-card">
+          <div className="mp-auth-form-card text-center" style={{ padding: '48px 32px' }}>
+            <div className="w-20 h-20 bg-green-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-green-500/30">
+              <CheckCircle className="w-10 h-10 text-white" strokeWidth={2.5} />
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-3" style={{fontFamily: "'Sora', sans-serif"}}>
+              Provjerite email
+            </h1>
+            <p className="text-base text-gray-600 mb-8">
+              Ako postoji račun s tim emailom, poslali smo vam link za resetiranje lozinke.
+            </p>
+            <Link to="/prijava">
+              <button className="mp-btn-primary w-full">
+                Povratak na prijavu
+              </button>
+            </Link>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight mb-2">Provjerite email</h1>
-          <p className="text-base text-slate-600 mb-6">
-            Ako postoji račun s tim emailom, poslali smo vam link za resetiranje lozinke.
-          </p>
-          <Link to="/prijava">
-            <Button className="w-full bg-primary hover:bg-primary-hover text-white font-semibold">
-              Povratak na prijavu
-            </Button>
-          </Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
-      <div className="max-w-md w-full">
-        <div className="text-center mb-8">
+    <div className="mp-auth-container">
+      <div className="mp-auth-card">
+        {/* Logo & Header */}
+        <div className="mp-auth-logo">
           <Link to="/">
-            <h1 className="text-4xl font-extrabold text-primary tracking-tight mb-2">Fiksiraj</h1>
+            <h1 className="hover:opacity-80 transition-opacity cursor-pointer">Fiksiraj</h1>
           </Link>
-          <p className="text-base leading-relaxed text-slate-600">Resetirajte svoju lozinku</p>
+          <p>Resetirajte svoju lozinku</p>
         </div>
 
-        <div className="bg-white border border-slate-200 rounded-lg p-8 shadow-sm">
+        {/* Form Card */}
+        <div className="mp-auth-form-card">
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <Label htmlFor="email" className="text-sm font-medium text-slate-700">Email adresa</Label>
-              <Input
-                id="email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="mt-1"
-                placeholder="ivan@example.com"
-                data-testid="forgot-password-email-input"
-              />
-              <p className="text-sm text-slate-500 mt-2">
+            <div className="mp-form-group" style={{ marginBottom: '16px' }}>
+              <label className="mp-form-label">Email adresa</label>
+              <div className="mp-form-input-icon">
+                <Mail />
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="mp-form-input"
+                  placeholder="ivan@example.com"
+                  data-testid="forgot-password-email-input"
+                />
+              </div>
+              <p className="text-sm text-gray-500 mt-3">
                 Poslat ćemo vam link za resetiranje lozinke na vaš email.
               </p>
             </div>
 
-            <Button
+            <button
               type="submit"
-              className="w-full bg-primary hover:bg-primary-hover text-white font-semibold py-3 shadow-sm active:scale-95"
+              className="mp-btn-primary w-full"
               disabled={loading}
               data-testid="forgot-password-submit-button"
             >
-              {loading ? 'Slanje...' : 'Pošalji link'}
-            </Button>
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                <>
+                  <span>Pošalji link</span>
+                  <ArrowRight className="w-5 h-5" />
+                </>
+              )}
+            </button>
           </form>
 
           <div className="mt-6 text-center">
-            <Link to="/prijava" className="text-sm text-primary font-medium hover:underline">
-              ← Povratak na prijavu
+            <Link to="/prijava" className="text-sm text-blue-600 font-semibold hover:underline flex items-center justify-center gap-2">
+              <ArrowLeft className="w-4 h-4" />
+              Povratak na prijavu
             </Link>
           </div>
         </div>

@@ -1,10 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { CITIES, PROFESSIONS } from '@/constants';
 import { User, Briefcase, MapPin, Phone, Mail, Lock, ArrowRight, FileText, Building2, Eye, EyeOff } from 'lucide-react';
@@ -57,7 +53,6 @@ const RegisterPage = () => {
     
     setLoading(true);
     try {
-      // Pass 'HR' as default country (Croatia)
       await register(formData.name, formData.profession, 'HR', formData.city, formData.bio, formData.phone, formData.email, formData.password);
       toast.success('Uspješna registracija!');
       navigate('/dashboard');
@@ -68,127 +63,117 @@ const RegisterPage = () => {
     }
   };
 
-  // Required field label component
-  const RequiredLabel = ({ htmlFor, children }) => (
-    <Label htmlFor={htmlFor} className="form-label">
-      {children} <span className="text-red-500">*</span>
-    </Label>
-  );
-
   return (
-    <div className="min-h-screen app-background flex items-center justify-center px-4 py-12">
-      <div className="max-w-lg w-full">
+    <div className="mp-auth-container" style={{ padding: '40px 20px' }}>
+      <div className="mp-auth-card" style={{ maxWidth: '520px' }}>
         {/* Logo & Header */}
-        <div className="text-center mb-10">
-          <Link to="/" className="inline-block">
-            <h1 className="text-5xl font-bold text-primary tracking-tight mb-3 hover:scale-105 transition-transform" style={{fontFamily: "'Sora', sans-serif"}}>Fiksiraj</h1>
+        <div className="mp-auth-logo">
+          <Link to="/">
+            <h1 className="hover:opacity-80 transition-opacity cursor-pointer">Fiksiraj</h1>
           </Link>
-          <p className="text-lg text-slate-400 font-medium">Registrirajte se kao profesionalac</p>
+          <p>Registrirajte se kao profesionalac</p>
         </div>
 
         {/* Registration Card */}
-        <div className="hero-card">
+        <div className="mp-auth-form-card">
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Personal Info Section */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              {/* Ime i prezime - Required */}
-              <div className="sm:col-span-2">
-                <RequiredLabel htmlFor="name">Ime i prezime</RequiredLabel>
-                <div className="relative">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                  <Input
-                    id="name"
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => {
-                      setFormData({ ...formData, name: e.target.value });
-                      if (errors.name) setErrors({ ...errors, name: '' });
-                    }}
-                    className={`form-input pl-12 ${errors.name ? 'border-red-500' : ''}`}
-                    placeholder="Ivan Horvat"
-                    data-testid="register-name-input"
-                  />
-                </div>
-                {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+            {/* Ime i prezime */}
+            <div className="mp-form-group" style={{ marginBottom: '20px' }}>
+              <label className="mp-form-label">
+                Ime i prezime <span className="text-red-500">*</span>
+              </label>
+              <div className="mp-form-input-icon">
+                <User />
+                <input
+                  type="text"
+                  required
+                  value={formData.name}
+                  onChange={(e) => {
+                    setFormData({ ...formData, name: e.target.value });
+                    if (errors.name) setErrors({ ...errors, name: '' });
+                  }}
+                  className={`mp-form-input ${errors.name ? 'border-red-500' : ''}`}
+                  placeholder="Ivan Horvat"
+                  data-testid="register-name-input"
+                />
               </div>
+              {errors.name && <p className="text-red-500 text-sm mt-2">{errors.name}</p>}
+            </div>
 
-              {/* Naziv firme - NEW Required field */}
-              <div className="sm:col-span-2">
-                <RequiredLabel htmlFor="companyName">Naziv firme ili obrta</RequiredLabel>
-                <div className="relative">
-                  <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                  <Input
-                    id="companyName"
-                    type="text"
-                    required
-                    value={formData.companyName}
-                    onChange={(e) => {
-                      setFormData({ ...formData, companyName: e.target.value });
-                      if (errors.companyName) setErrors({ ...errors, companyName: '' });
-                    }}
-                    className={`form-input pl-12 ${errors.companyName ? 'border-red-500' : ''}`}
-                    placeholder="Unesite naziv firme ili obrta"
-                    data-testid="register-company-input"
-                  />
-                </div>
-                {errors.companyName && <p className="text-red-500 text-sm mt-1">{errors.companyName}</p>}
+            {/* Naziv firme */}
+            <div className="mp-form-group" style={{ marginBottom: '20px' }}>
+              <label className="mp-form-label">
+                Naziv firme ili obrta <span className="text-red-500">*</span>
+              </label>
+              <div className="mp-form-input-icon">
+                <Building2 />
+                <input
+                  type="text"
+                  required
+                  value={formData.companyName}
+                  onChange={(e) => {
+                    setFormData({ ...formData, companyName: e.target.value });
+                    if (errors.companyName) setErrors({ ...errors, companyName: '' });
+                  }}
+                  className={`mp-form-input ${errors.companyName ? 'border-red-500' : ''}`}
+                  placeholder="Unesite naziv firme ili obrta"
+                  data-testid="register-company-input"
+                />
               </div>
+              {errors.companyName && <p className="text-red-500 text-sm mt-2">{errors.companyName}</p>}
+            </div>
 
-              {/* Zanimanje */}
-              <div className="sm:col-span-2">
-                <Label htmlFor="profession" className="form-label">Zanimanje</Label>
-                <div className="relative">
-                  <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 z-10 pointer-events-none hidden sm:block" />
-                  <select
-                    id="profession"
-                    required
-                    value={formData.profession}
-                    onChange={(e) => setFormData({ ...formData, profession: e.target.value })}
-                    className="form-input sm:pl-12 pl-4 w-full cursor-pointer"
-                    data-testid="register-profession-input"
-                  >
-                    <option value="">Odaberite zanimanje</option>
-                    {PROFESSIONS.map((prof) => (
-                      <option key={prof} value={prof}>{prof}</option>
-                    ))}
-                  </select>
-                </div>
+            {/* Zanimanje */}
+            <div className="mp-form-group" style={{ marginBottom: '20px' }}>
+              <label className="mp-form-label">Zanimanje</label>
+              <div className="mp-form-input-icon">
+                <Briefcase className="hidden sm:block" />
+                <select
+                  required
+                  value={formData.profession}
+                  onChange={(e) => setFormData({ ...formData, profession: e.target.value })}
+                  className="mp-form-input w-full cursor-pointer sm:pl-14 pl-5"
+                  data-testid="register-profession-input"
+                >
+                  <option value="">Odaberite zanimanje</option>
+                  {PROFESSIONS.map((prof) => (
+                    <option key={prof} value={prof}>{prof}</option>
+                  ))}
+                </select>
               </div>
+            </div>
 
-              {/* Grad - Full width now (no country field) */}
-              <div className="sm:col-span-2">
-                <Label htmlFor="city" className="form-label">Grad</Label>
-                <div className="relative">
-                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 z-10 pointer-events-none hidden sm:block" />
-                  <select
-                    id="city"
-                    required
-                    value={formData.city}
-                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                    className="form-input sm:pl-12 pl-4 w-full cursor-pointer"
-                    data-testid="register-city-input"
-                  >
-                    <option value="">Odaberite grad</option>
-                    {CITIES['HR']?.map((city) => (
-                      <option key={city} value={city}>{city}</option>
-                    ))}
-                  </select>
-                </div>
+            {/* Grad */}
+            <div className="mp-form-group" style={{ marginBottom: '20px' }}>
+              <label className="mp-form-label">Grad</label>
+              <div className="mp-form-input-icon">
+                <MapPin className="hidden sm:block" />
+                <select
+                  required
+                  value={formData.city}
+                  onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                  className="mp-form-input w-full cursor-pointer sm:pl-14 pl-5"
+                  data-testid="register-city-input"
+                >
+                  <option value="">Odaberite grad</option>
+                  {CITIES['HR']?.map((city) => (
+                    <option key={city} value={city}>{city}</option>
+                  ))}
+                </select>
               </div>
             </div>
 
             {/* Kratak opis */}
-            <div>
-              <Label htmlFor="bio" className="form-label">Kratak opis</Label>
-              <div className="relative">
-                <FileText className="absolute left-4 top-4 w-5 h-5 text-slate-400" />
-                <Textarea
-                  id="bio"
+            <div className="mp-form-group" style={{ marginBottom: '20px' }}>
+              <label className="mp-form-label">Kratak opis</label>
+              <div className="mp-form-input-icon" style={{ alignItems: 'flex-start' }}>
+                <FileText style={{ top: '22px', transform: 'none' }} />
+                <textarea
                   required
                   value={formData.bio}
                   onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                  className="form-textarea pl-12 min-h-[100px]"
+                  className="mp-form-input min-h-[100px] resize-none"
+                  style={{ paddingLeft: '56px' }}
                   placeholder="Iskustvo, specijalizacija..."
                   rows={3}
                   data-testid="register-bio-input"
@@ -196,13 +181,14 @@ const RegisterPage = () => {
               </div>
             </div>
 
-            {/* Telefon - Required */}
-            <div>
-              <RequiredLabel htmlFor="phone">Telefon</RequiredLabel>
-              <div className="relative">
-                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                <Input
-                  id="phone"
+            {/* Telefon */}
+            <div className="mp-form-group" style={{ marginBottom: '20px' }}>
+              <label className="mp-form-label">
+                Telefon <span className="text-red-500">*</span>
+              </label>
+              <div className="mp-form-input-icon">
+                <Phone />
+                <input
                   type="tel"
                   required
                   value={formData.phone}
@@ -210,21 +196,22 @@ const RegisterPage = () => {
                     setFormData({ ...formData, phone: e.target.value });
                     if (errors.phone) setErrors({ ...errors, phone: '' });
                   }}
-                  className={`form-input pl-12 ${errors.phone ? 'border-red-500' : ''}`}
+                  className={`mp-form-input ${errors.phone ? 'border-red-500' : ''}`}
                   placeholder="+385 91 234 5678"
                   data-testid="register-phone-input"
                 />
               </div>
-              {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
+              {errors.phone && <p className="text-red-500 text-sm mt-2">{errors.phone}</p>}
             </div>
 
-            {/* Email - Required */}
-            <div>
-              <RequiredLabel htmlFor="email">Email</RequiredLabel>
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                <Input
-                  id="email"
+            {/* Email */}
+            <div className="mp-form-group" style={{ marginBottom: '20px' }}>
+              <label className="mp-form-label">
+                Email <span className="text-red-500">*</span>
+              </label>
+              <div className="mp-form-input-icon">
+                <Mail />
+                <input
                   type="email"
                   required
                   value={formData.email}
@@ -232,33 +219,33 @@ const RegisterPage = () => {
                     setFormData({ ...formData, email: e.target.value });
                     if (errors.email) setErrors({ ...errors, email: '' });
                   }}
-                  className={`form-input pl-12 ${errors.email ? 'border-red-500' : ''}`}
+                  className={`mp-form-input ${errors.email ? 'border-red-500' : ''}`}
                   placeholder="ivan@example.com"
                   data-testid="register-email-input"
                 />
               </div>
-              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+              {errors.email && <p className="text-red-500 text-sm mt-2">{errors.email}</p>}
             </div>
 
             {/* Lozinka */}
-            <div>
-              <Label htmlFor="password" className="form-label">Lozinka</Label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                <Input
-                  id="password"
+            <div className="mp-form-group" style={{ marginBottom: '24px' }}>
+              <label className="mp-form-label">Lozinka</label>
+              <div className="mp-form-input-icon relative">
+                <Lock />
+                <input
                   type={showPassword ? "text" : "password"}
                   required
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="form-input pl-12 pr-12"
+                  className="mp-form-input"
+                  style={{ paddingRight: '52px' }}
                   placeholder="••••••••"
                   data-testid="register-password-input"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                   data-testid="toggle-password-visibility"
                 >
                   {showPassword ? (
@@ -270,9 +257,9 @@ const RegisterPage = () => {
               </div>
             </div>
 
-            <Button
+            <button
               type="submit"
-              className="btn-primary w-full flex items-center justify-center gap-2 mt-6"
+              className="mp-btn-primary w-full"
               disabled={loading}
               data-testid="register-submit-button"
             >
@@ -284,13 +271,13 @@ const RegisterPage = () => {
                   <ArrowRight className="w-5 h-5" />
                 </>
               )}
-            </Button>
+            </button>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-slate-100 text-center">
-            <p className="text-sm text-slate-500">
+          <div className="mp-auth-footer">
+            <p>
               Već imate račun?{' '}
-              <Link to="/prijava" className="text-primary font-bold hover:underline" data-testid="login-link">
+              <Link to="/prijava" data-testid="login-link">
                 Prijavite se
               </Link>
             </p>

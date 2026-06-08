@@ -1,7 +1,6 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { LogOut, Calendar, Clock, Briefcase, Home, Settings } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -16,81 +15,92 @@ const Navbar = () => {
   const isActive = (path) => location.pathname === path;
 
   const navLinkClass = (path) => `
-    p-2.5 sm:px-5 sm:py-3 rounded-2xl text-sm font-bold transition-all duration-300 flex items-center gap-2
+    px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2
     ${isActive(path) 
-      ? 'bg-gradient-to-br from-primary to-blue-600 text-white shadow-lg shadow-primary/20' 
-      : 'text-slate-500 hover:text-primary hover:bg-primary/5'
+      ? 'bg-black text-white' 
+      : 'text-gray-500 hover:text-black hover:bg-gray-100'
     }
   `;
 
   return (
-    <nav className="bg-white/80 backdrop-blur-xl border-b border-slate-200/50 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16 sm:h-20 py-2 sm:py-4">
-          <Link to="/dashboard" className="flex items-center space-x-2 group">
-            <span className="text-2xl sm:text-3xl font-bold text-primary tracking-tight group-hover:scale-105 transition-transform" style={{fontFamily: "'Sora', sans-serif"}}>Fiksiraj</span>
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-b border-gray-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16 sm:h-20">
+          <Link to="/dashboard" className="flex items-center">
+            <span className="text-2xl sm:text-3xl font-bold text-black tracking-tight" style={{fontFamily: "'Sora', sans-serif"}}>Fiksiraj</span>
           </Link>
           
-          <div className="flex items-center gap-1 sm:gap-2">
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-1">
             <Link
               to="/dashboard"
               className={navLinkClass('/dashboard')}
               data-testid="nav-dashboard"
             >
-              <Home className="w-5 h-5" />
-              <span className="hidden sm:inline">Početna</span>
+              <Home className="w-4 h-4" />
+              <span>Početna</span>
             </Link>
             <Link
               to="/usluge"
               className={navLinkClass('/usluge')}
               data-testid="nav-services"
             >
-              <Briefcase className="w-5 h-5" />
-              <span className="hidden sm:inline">Usluge</span>
+              <Briefcase className="w-4 h-4" />
+              <span>Usluge</span>
             </Link>
             <Link
               to="/radno-vrijeme"
               className={navLinkClass('/radno-vrijeme')}
               data-testid="nav-hours"
             >
-              <Clock className="w-5 h-5" />
-              <span className="hidden sm:inline">Vrijeme</span>
+              <Clock className="w-4 h-4" />
+              <span>Vrijeme</span>
             </Link>
             <Link
               to="/rezervacije"
               className={navLinkClass('/rezervacije')}
               data-testid="nav-bookings"
             >
-              <Calendar className="w-5 h-5" />
-              <span className="hidden sm:inline">Rezervacije</span>
+              <Calendar className="w-4 h-4" />
+              <span>Rezervacije</span>
             </Link>
             <Link
               to="/postavke"
               className={navLinkClass('/postavke')}
               data-testid="nav-settings"
             >
-              <Settings className="w-5 h-5" />
-              <span className="hidden sm:inline">Postavke</span>
+              <Settings className="w-4 h-4" />
+              <span>Postavke</span>
             </Link>
             
-            <div className="h-8 w-px bg-slate-200 mx-2 sm:mx-3 hidden sm:block"></div>
+            <div className="h-8 w-px bg-gray-200 mx-3"></div>
             
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-3">
               <div className="hidden lg:flex items-center gap-3">
-                <div className="w-9 h-9 bg-gradient-to-br from-slate-200 to-slate-300 rounded-xl flex items-center justify-center">
-                  <span className="text-sm font-black text-slate-600">{user?.name?.charAt(0)}</span>
+                <div className="w-9 h-9 bg-black rounded-xl flex items-center justify-center">
+                  <span className="text-sm font-bold text-white">{user?.name?.charAt(0)}</span>
                 </div>
-                <span className="text-sm font-bold text-slate-600">{user?.name}</span>
+                <span className="text-sm font-semibold text-gray-700">{user?.name}</span>
               </div>
-              <Button
+              <button
                 onClick={handleLogout}
-                variant="ghost"
-                className="text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl p-2.5 transition-all duration-300"
+                className="text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl p-2.5 transition-all"
                 data-testid="logout-button"
               >
                 <LogOut className="w-5 h-5" />
-              </Button>
+              </button>
             </div>
+          </div>
+
+          {/* Mobile Header Actions */}
+          <div className="flex md:hidden items-center gap-2">
+            <button
+              onClick={handleLogout}
+              className="text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl p-2 transition-all"
+              data-testid="logout-button-mobile"
+            >
+              <LogOut className="w-5 h-5" />
+            </button>
           </div>
         </div>
       </div>
