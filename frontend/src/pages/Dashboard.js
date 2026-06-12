@@ -221,15 +221,25 @@ const Dashboard = () => {
           {/* Premium Hero Card */}
           <div className="mp-hero-card mb-8">
             <div className="flex items-center gap-4 sm:gap-5 relative z-10">
-              {profile?.profile_image_id ? (
-                <img 
-                  src={`${API}/images/${profile.profile_image_id}`}
-                  alt={user?.name}
-                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover shadow-xl border-2 border-white/20"
-                />
-              ) : (
-                <UserAvatar name={user?.name} size="xl" className="shadow-xl border-2 border-white/20" />
-              )}
+              <div className="relative flex-shrink-0">
+                {profile?.profile_image_id ? (
+                  <img 
+                    src={`${API}/images/${profile.profile_image_id}`}
+                    alt={user?.name}
+                    className="block w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover shadow-xl border-2 border-white/20"
+                  />
+                ) : (
+                  <UserAvatar name={user?.name} size="xl" className="shadow-xl border-2 border-white/20" />
+                )}
+                {profile?.company_logo_id && (
+                  <img
+                    src={`${API}/images/${profile.company_logo_id}`}
+                    alt="Logo tvrtke"
+                    className="absolute -bottom-1.5 -right-1.5 w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain bg-white p-0.5 shadow-lg border border-gray-200"
+                    data-testid="dashboard-company-logo-badge"
+                  />
+                )}
+              </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-white/60 mb-1">Dobrodošli natrag</p>
                 <h1 className="text-xl sm:text-2xl font-bold text-white truncate" style={{fontFamily: "'Sora', sans-serif"}}>

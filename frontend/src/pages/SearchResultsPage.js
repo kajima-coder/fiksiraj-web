@@ -235,9 +235,18 @@ const SearchResultsPage = () => {
                     >
                       {/* Card Image Area */}
                       <div className="mp-card-image">
-                        <div className="mp-card-image-placeholder">
-                          {prof.name.charAt(0)}
-                        </div>
+                        {prof.profile_image_id ? (
+                          <img
+                            src={`${API}/images/${prof.profile_image_id}`}
+                            alt={prof.name}
+                            className="mp-card-photo"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="mp-card-image-placeholder">
+                            {prof.name.charAt(0)}
+                          </div>
+                        )}
                         {/* Rating Badge */}
                         <div className="mp-card-badge">
                           <Star />

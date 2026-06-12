@@ -212,19 +212,28 @@ const PublicBookingPage = () => {
       </nav>
 
       {/* Professional Profile Header */}
-      <div className="mp-profile-header pt-20">
-        {professional.profile_image_id ? (
-          <img 
-            src={`${API}/images/${professional.profile_image_id}`}
-            alt={professional.name}
-            className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl object-cover mx-auto mb-5 shadow-xl border-2 border-white/20"
-            style={{ position: 'relative', zIndex: 1 }}
-          />
-        ) : (
-          <div className="mp-profile-avatar">
-            {professional.name.charAt(0)}
-          </div>
-        )}
+      <div className="mp-profile-header">
+        <div className="relative inline-block mb-5" style={{ zIndex: 1 }}>
+          {professional.profile_image_id ? (
+            <img 
+              src={`${API}/images/${professional.profile_image_id}`}
+              alt={professional.name}
+              className="block w-24 h-24 sm:w-28 sm:h-28 rounded-3xl object-cover object-center shadow-xl border-2 border-white/20"
+            />
+          ) : (
+            <div className="mp-profile-avatar" style={{ margin: 0 }}>
+              {professional.name.charAt(0)}
+            </div>
+          )}
+          {professional.company_logo_id && (
+            <img
+              src={`${API}/images/${professional.company_logo_id}`}
+              alt="Logo tvrtke"
+              className="absolute -bottom-2 -right-2 w-10 h-10 sm:w-11 sm:h-11 rounded-xl object-contain bg-white p-1 shadow-lg border border-gray-200"
+              data-testid="public-company-logo-badge"
+            />
+          )}
+        </div>
         <h1 className="mp-profile-name" data-testid="professional-name">{professional.name}</h1>
         <p className="mp-profile-profession">{professional.profession}</p>
         

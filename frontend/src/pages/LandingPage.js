@@ -100,44 +100,39 @@ const LandingPage = () => {
         </div>
       </nav>
 
-      {/* Hero Section - Premium with Gradient Background */}
-      <section className="relative pt-20 sm:pt-24 overflow-hidden">
-        {/* Background Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-blue-50/30"></div>
-        <div className="absolute top-20 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-blue-100/40 via-transparent to-transparent rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-tr from-amber-50/50 via-transparent to-transparent rounded-full blur-3xl"></div>
-        
-        {/* Decorative Elements */}
-        <div className="absolute top-32 left-10 w-20 h-20 border border-gray-200/50 rounded-2xl rotate-12 hidden lg:block"></div>
-        <div className="absolute top-48 right-20 w-16 h-16 border border-blue-200/50 rounded-full hidden lg:block"></div>
-        <div className="absolute bottom-40 left-1/4 w-12 h-12 bg-amber-100/50 rounded-xl rotate-45 hidden lg:block"></div>
-        
-        <div className="relative max-w-4xl mx-auto text-center px-4 pt-8 sm:pt-12 pb-8">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-full px-5 py-2.5 mb-6 shadow-sm">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            <span className="text-sm font-semibold text-gray-700">Više od 500+ majstora u Hrvatskoj</span>
+      {/* Hero Section - Dark Premium with Background Image */}
+      <section className="relative pt-16 sm:pt-20 overflow-hidden bg-[#0B1424]">
+        {/* Background Image + Dark Overlay */}
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1920&q=80"
+            alt=""
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#0B1424]/95 via-[#0E1B33]/85 to-[#0B1424]/60"></div>
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#0B1424]/80 to-transparent"></div>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-20 pb-14 sm:pb-24">
+          <div className="max-w-3xl">
+            {/* Title - Premium Typography */}
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight mb-5 leading-[1.08]" style={{fontFamily: "'Sora', sans-serif"}}>
+              Pronađite majstora
+              <br />
+              <span className="text-blue-400">za svaki posao</span>
+            </h1>
+
+            {/* Blue accent bar */}
+            <div className="w-24 sm:w-36 h-1.5 rounded-full bg-gradient-to-r from-blue-500 via-blue-400 to-blue-400/20 mb-6 shadow-lg shadow-blue-500/30"></div>
+
+            {/* Subtitle */}
+            <p className="text-base sm:text-lg text-white/70 mb-8 sm:mb-10 max-w-xl leading-relaxed">
+              Brzo pronađite provjerene stručnjake za sve kućne popravke i poslove. Bez registracije.
+            </p>
           </div>
 
-          {/* Title - Premium Typography */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-black tracking-tight mb-5 leading-[1.1]" style={{fontFamily: "'Sora', sans-serif"}}>
-            Pronađite majstora
-            <br />
-            <span className="relative">
-              za svaki posao
-              <svg className="absolute -bottom-2 left-0 w-full h-3 text-blue-500/20" viewBox="0 0 200 12" preserveAspectRatio="none">
-                <path d="M0,8 Q50,0 100,8 T200,8" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round"/>
-              </svg>
-            </span>
-          </h1>
-
-          {/* Subtitle */}
-          <p className="text-base sm:text-lg text-gray-500 mb-8 max-w-xl mx-auto leading-relaxed">
-            Brzo pronađite provjerene stručnjake za sve kućne popravke i poslove. Bez registracije.
-          </p>
-
           {/* Premium Search Card */}
-          <div className="bg-white rounded-3xl p-4 sm:p-6 shadow-xl shadow-gray-200/50 border border-gray-100 max-w-2xl mx-auto mb-6">
+          <div className="bg-white rounded-3xl p-4 sm:p-6 shadow-2xl shadow-black/40 max-w-3xl">
             <form onSubmit={handleSearch}>
               <div className="flex flex-col sm:flex-row gap-3">
                 <div className="flex-1 relative">
@@ -278,9 +273,18 @@ const LandingPage = () => {
                 >
                   {/* Card Image Area */}
                   <div className="mp-card-image">
-                    <div className="mp-card-image-placeholder">
-                      {prof.name.charAt(0)}
-                    </div>
+                    {prof.profile_image_id ? (
+                      <img
+                        src={`${API}/images/${prof.profile_image_id}`}
+                        alt={prof.name}
+                        className="mp-card-photo"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="mp-card-image-placeholder">
+                        {prof.name.charAt(0)}
+                      </div>
+                    )}
                     {/* Rating Badge */}
                     <div className="mp-card-badge">
                       <Star />

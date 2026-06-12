@@ -255,6 +255,15 @@
   justify-content: center;
 }
 
+.mp-card-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
 .mp-card-image-placeholder {
   width: 80px;
   height: 80px;
@@ -1026,10 +1035,16 @@
    =========================================== */
 .mp-profile-header {
   background: var(--mp-black);
-  padding: 40px 24px;
+  padding: 96px 24px 48px;
   text-align: center;
   position: relative;
   overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .mp-profile-header {
+    padding-top: 120px;
+  }
 }
 
 .mp-profile-header::before {
