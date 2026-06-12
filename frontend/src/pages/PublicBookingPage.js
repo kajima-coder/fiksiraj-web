@@ -213,9 +213,18 @@ const PublicBookingPage = () => {
 
       {/* Professional Profile Header */}
       <div className="mp-profile-header pt-20">
-        <div className="mp-profile-avatar">
-          {professional.name.charAt(0)}
-        </div>
+        {professional.profile_image_id ? (
+          <img 
+            src={`${API}/images/${professional.profile_image_id}`}
+            alt={professional.name}
+            className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl object-cover mx-auto mb-5 shadow-xl border-2 border-white/20"
+            style={{ position: 'relative', zIndex: 1 }}
+          />
+        ) : (
+          <div className="mp-profile-avatar">
+            {professional.name.charAt(0)}
+          </div>
+        )}
         <h1 className="mp-profile-name" data-testid="professional-name">{professional.name}</h1>
         <p className="mp-profile-profession">{professional.profession}</p>
         

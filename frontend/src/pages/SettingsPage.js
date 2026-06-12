@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
 import MobileBottomNav from '@/components/MobileBottomNav';
 import UserAvatar from '@/components/UserAvatar';
-import { User, Building2, Mail, Phone, Link as LinkIcon, CreditCard, ExternalLink, Loader2, CheckCircle, AlertTriangle, Clock, Copy } from 'lucide-react';
+import { User, Building2, Mail, Phone, Link as LinkIcon, CreditCard, ExternalLink, Loader2, CheckCircle, AlertTriangle, Clock, Copy, Camera, Image, Upload, X, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import axios from 'axios';
 import { getErrorMessage } from '@/utils/errorUtils';
@@ -17,6 +17,11 @@ const SettingsPage = () => {
   const [loading, setLoading] = useState(true);
   const [portalLoading, setPortalLoading] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [uploadingProfile, setUploadingProfile] = useState(false);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+  
+  const profileInputRef = useRef(null);
+  const logoInputRef = useRef(null);
 
   useEffect(() => {
     fetchData();
@@ -35,6 +40,106 @@ const SettingsPage = () => {
       toast.error('Greška pri učitavanju podataka');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleProfileImageUpload = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error('Nepodržani format. Koristite JPG, PNG, WebP ili GIF.');
+      return;
+    }
+    
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Slika je prevelika. Maksimalna veličina: 5MB');
+      return;
+    }
+    
+    setUploadingProfile(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    try {
+      const response = await axios.post(`${API}/upload/profile-image`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      
+      toast.success('Profilna slika uspješno učitana!');
+      // Refresh profile data
+      fetchData();
+    } catch (error) {
+      toast.error(getErrorMessage(error, 'Greška pri učitavanju slike'));
+    } finally {
+      setUploadingProfile(false);
+      // Reset input
+      if (profileInputRef.current) profileInputRef.current.value = '';
+    }
+  };
+  
+  const handleLogoUpload = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error('Nepodržani format. Koristite JPG, PNG, WebP ili GIF.');
+      return;
+    }
+    
+    // Validate file size (2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error('Logo je prevelik. Maksimalna veličina: 2MB');
+      return;
+    }
+    
+    setUploadingLogo(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    try {
+      const response = await axios.post(`${API}/upload/company-logo`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      
+      toast.success('Logo firme uspješno učitan!');
+      // Refresh profile data
+      fetchData();
+    } catch (error) {
+      toast.error(getErrorMessage(error, 'Greška pri učitavanju loga'));
+    } finally {
+      setUploadingLogo(false);
+      // Reset input
+      if (logoInputRef.current) logoInputRef.current.value = '';
+    }
+  };
+  
+  const handleDeleteProfileImage = async () => {
+    if (!window.confirm('Jeste li sigurni da želite obrisati profilnu sliku?')) return;
+    
+    try {
+      await axios.delete(`${API}/upload/profile-image`);
+      toast.success('Profilna slika obrisana');
+      fetchData();
+    } catch (error) {
+      toast.error(getErrorMessage(error, 'Greška pri brisanju slike'));
+    }
+  };
+  
+  const handleDeleteLogo = async () => {
+    if (!window.confirm('Jeste li sigurni da želite obrisati logo firme?')) return;
+    
+    try {
+      await axios.delete(`${API}/upload/company-logo`);
+      toast.success('Logo firme obrisan');
+      fetchData();
+    } catch (error) {
+      toast.error(getErrorMessage(error, 'Greška pri brisanju loga'));
     }
   };
 
@@ -165,6 +270,14 @@ const SettingsPage = () => {
     };
   };
 
+  // Generate image URLs
+  const profileImageUrl = profile?.profile_image_id 
+    ? `${API}/images/${profile.profile_image_id}` 
+    : null;
+  const companyLogoUrl = profile?.company_logo_id 
+    ? `${API}/images/${profile.company_logo_id}` 
+    : null;
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -195,10 +308,21 @@ const SettingsPage = () => {
             <p className="text-base text-gray-500">Upravljajte vašim profilom i pretplatom</p>
           </div>
 
-          {/* Profile Hero Card */}
+          {/* Profile Hero Card with Image */}
           <div className="mp-hero-card mb-8">
             <div className="flex items-center gap-4 sm:gap-5 relative z-10">
-              <UserAvatar name={profile?.name} size="xl" className="shadow-xl border-2 border-white/20" />
+              {/* Profile Image/Avatar */}
+              <div className="relative group">
+                {profileImageUrl ? (
+                  <img 
+                    src={profileImageUrl} 
+                    alt={profile?.name}
+                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover shadow-xl border-2 border-white/20"
+                  />
+                ) : (
+                  <UserAvatar name={profile?.name} size="xl" className="shadow-xl border-2 border-white/20" />
+                )}
+              </div>
               <div className="flex-1 min-w-0">
                 <h2 className="text-xl sm:text-2xl font-bold text-white truncate" style={{fontFamily: "'Sora', sans-serif"}}>
                   {profile?.name}
@@ -208,6 +332,157 @@ const SettingsPage = () => {
                 </p>
                 <p className="text-xs text-white/50 mt-1 truncate">
                   {profile?.email}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Profile Image & Company Logo Upload Section */}
+          <div className="mp-info-card mb-6" style={{ padding: '28px' }}>
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-12 h-12 bg-purple-600 rounded-2xl flex items-center justify-center">
+                <Camera className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900" style={{fontFamily: "'Sora', sans-serif"}}>Slike profila</h3>
+                <p className="text-sm text-gray-500">Profilna slika i logo firme</p>
+              </div>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-6">
+              {/* Profile Photo Upload Area */}
+              <div>
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Profilna slika</p>
+                
+                {profileImageUrl ? (
+                  // Show uploaded image with delete option
+                  <div className="relative group">
+                    <div className="border-2 border-gray-200 rounded-2xl p-4 text-center">
+                      <img 
+                        src={profileImageUrl} 
+                        alt="Profilna slika"
+                        className="w-24 h-24 rounded-2xl object-cover mx-auto mb-3"
+                      />
+                      <p className="text-sm font-semibold text-gray-700 mb-3">Profilna slika učitana</p>
+                      <div className="flex gap-2 justify-center">
+                        <button
+                          onClick={() => profileInputRef.current?.click()}
+                          className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-xl text-sm font-semibold text-gray-700 transition-colors flex items-center gap-2"
+                          disabled={uploadingProfile}
+                        >
+                          <Upload className="w-4 h-4" />
+                          Zamijeni
+                        </button>
+                        <button
+                          onClick={handleDeleteProfileImage}
+                          className="px-4 py-2 bg-red-50 hover:bg-red-100 rounded-xl text-sm font-semibold text-red-600 transition-colors flex items-center gap-2"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          Obriši
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  // Show upload area
+                  <div 
+                    onClick={() => !uploadingProfile && profileInputRef.current?.click()}
+                    className={`border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center hover:border-gray-300 hover:bg-gray-50/50 transition-all cursor-pointer group ${uploadingProfile ? 'opacity-50 cursor-wait' : ''}`}
+                  >
+                    <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-gray-200 transition-colors">
+                      {uploadingProfile ? (
+                        <Loader2 className="w-8 h-8 text-gray-400 animate-spin" />
+                      ) : profile?.name ? (
+                        <span className="text-2xl font-bold text-gray-400">{profile.name.charAt(0)}</span>
+                      ) : (
+                        <User className="w-8 h-8 text-gray-400" />
+                      )}
+                    </div>
+                    <div className="flex items-center justify-center gap-2 text-sm font-semibold text-gray-600 mb-2">
+                      <Upload className="w-4 h-4" />
+                      <span>{uploadingProfile ? 'Učitavanje...' : 'Učitaj sliku'}</span>
+                    </div>
+                    <p className="text-xs text-gray-400">PNG, JPG, WebP do 5MB</p>
+                  </div>
+                )}
+                
+                <input
+                  ref={profileInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  onChange={handleProfileImageUpload}
+                  className="hidden"
+                  data-testid="profile-image-input"
+                />
+                <p className="text-xs text-gray-500 mt-3 text-center">
+                  Ova slika će se prikazivati na vašem javnom profilu
+                </p>
+              </div>
+
+              {/* Company Logo Upload Area */}
+              <div>
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Logo firme</p>
+                
+                {companyLogoUrl ? (
+                  // Show uploaded logo with delete option
+                  <div className="relative group">
+                    <div className="border-2 border-gray-200 rounded-2xl p-4 text-center">
+                      <img 
+                        src={companyLogoUrl} 
+                        alt="Logo firme"
+                        className="w-24 h-24 rounded-2xl object-contain mx-auto mb-3 bg-gray-50"
+                      />
+                      <p className="text-sm font-semibold text-gray-700 mb-3">Logo firme učitan</p>
+                      <div className="flex gap-2 justify-center">
+                        <button
+                          onClick={() => logoInputRef.current?.click()}
+                          className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-xl text-sm font-semibold text-gray-700 transition-colors flex items-center gap-2"
+                          disabled={uploadingLogo}
+                        >
+                          <Upload className="w-4 h-4" />
+                          Zamijeni
+                        </button>
+                        <button
+                          onClick={handleDeleteLogo}
+                          className="px-4 py-2 bg-red-50 hover:bg-red-100 rounded-xl text-sm font-semibold text-red-600 transition-colors flex items-center gap-2"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          Obriši
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  // Show upload area
+                  <div 
+                    onClick={() => !uploadingLogo && logoInputRef.current?.click()}
+                    className={`border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center hover:border-gray-300 hover:bg-gray-50/50 transition-all cursor-pointer group ${uploadingLogo ? 'opacity-50 cursor-wait' : ''}`}
+                  >
+                    <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-gray-200 transition-colors">
+                      {uploadingLogo ? (
+                        <Loader2 className="w-8 h-8 text-gray-400 animate-spin" />
+                      ) : (
+                        <Image className="w-8 h-8 text-gray-400" />
+                      )}
+                    </div>
+                    <div className="flex items-center justify-center gap-2 text-sm font-semibold text-gray-600 mb-2">
+                      <Upload className="w-4 h-4" />
+                      <span>{uploadingLogo ? 'Učitavanje...' : 'Učitaj logo'}</span>
+                    </div>
+                    <p className="text-xs text-gray-400">PNG, JPG, WebP do 2MB</p>
+                  </div>
+                )}
+                
+                <input
+                  ref={logoInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  onChange={handleLogoUpload}
+                  className="hidden"
+                  data-testid="company-logo-input"
+                />
+                <p className="text-xs text-gray-500 mt-3 text-center">
+                  Logo vaše firme ili obrta za profesionalniji izgled
                 </p>
               </div>
             </div>

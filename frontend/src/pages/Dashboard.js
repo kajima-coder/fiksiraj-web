@@ -18,6 +18,7 @@ const Dashboard = () => {
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
   const [bookings, setBookings] = useState([]);
+  const [profile, setProfile] = useState(null);
   const [subscriptionStatus, setSubscriptionStatus] = useState(null);
   const [subscriptionLoading, setSubscriptionLoading] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -31,6 +32,7 @@ const Dashboard = () => {
   useEffect(() => {
     fetchBookings();
     fetchSubscriptionStatus();
+    fetchProfile();
     checkOnboardingStatus();
     
     const subscriptionParam = searchParams.get('subscription');
@@ -42,6 +44,15 @@ const Dashboard = () => {
       toast.info('Pretplata je otkazana');
     }
   }, [searchParams]);
+
+  const fetchProfile = async () => {
+    try {
+      const response = await axios.get(`${API}/professional-profile`);
+      setProfile(response.data);
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+  };
 
   const checkOnboardingStatus = async () => {
     try {
@@ -210,7 +221,15 @@ const Dashboard = () => {
           {/* Premium Hero Card */}
           <div className="mp-hero-card mb-8">
             <div className="flex items-center gap-4 sm:gap-5 relative z-10">
-              <UserAvatar name={user?.name} size="xl" className="shadow-xl border-2 border-white/20" />
+              {profile?.profile_image_id ? (
+                <img 
+                  src={`${API}/images/${profile.profile_image_id}`}
+                  alt={user?.name}
+                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover shadow-xl border-2 border-white/20"
+                />
+              ) : (
+                <UserAvatar name={user?.name} size="xl" className="shadow-xl border-2 border-white/20" />
+              )}
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-white/60 mb-1">Dobrodošli natrag</p>
                 <h1 className="text-xl sm:text-2xl font-bold text-white truncate" style={{fontFamily: "'Sora', sans-serif"}}>

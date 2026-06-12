@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Calendar, Clock, CheckCircle, Users, Search, Star, MapPin, ArrowRight, Sparkles, Wrench, Zap, Paintbrush, Home } from 'lucide-react';
+import { Calendar, Clock, CheckCircle, Users, Search, Star, MapPin, ArrowRight, Sparkles, Wrench, Zap, Paintbrush, Home, Hammer, Droplets, Flame, TreePine, Car, Refrigerator, Wind, Truck, Sofa, Building2, Scissors, Layers, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import axios from 'axios';
 
@@ -11,6 +11,7 @@ const LandingPage = () => {
   const [searchCity, setSearchCity] = useState('');
   const [featuredProfessionals, setFeaturedProfessionals] = useState([]);
   const navigate = useNavigate();
+  const scrollContainerRef = useRef(null);
 
   useEffect(() => {
     fetchFeaturedProfessionals();
@@ -33,13 +34,46 @@ const LandingPage = () => {
     navigate(`/pretraga?${params.toString()}`);
   };
 
-  // Category icons mapping
-  const categories = [
-    { icon: Wrench, label: 'Vodoinstalater' },
-    { icon: Zap, label: 'Električar' },
-    { icon: Paintbrush, label: 'Soboslikar' },
-    { icon: Home, label: 'Keramičar' },
+  // All professions with icons - comprehensive mapping
+  const professionCategories = [
+    { icon: Droplets, label: 'Vodoinstalater', color: 'bg-blue-500' },
+    { icon: Zap, label: 'Električar', color: 'bg-amber-500' },
+    { icon: Paintbrush, label: 'Soboslikar', color: 'bg-pink-500' },
+    { icon: Hammer, label: 'Tesar', color: 'bg-orange-600' },
+    { icon: Building2, label: 'Zidar', color: 'bg-stone-500' },
+    { icon: Layers, label: 'Keramičar', color: 'bg-cyan-500' },
+    { icon: Home, label: 'Parketar', color: 'bg-amber-700' },
+    { icon: Layers, label: 'Knaufer', color: 'bg-gray-500' },
+    { icon: Home, label: 'Krovopokrivač', color: 'bg-red-600' },
+    { icon: Flame, label: 'Instalater grijanja', color: 'bg-orange-500' },
+    { icon: Flame, label: 'Plinoinstalater', color: 'bg-red-500' },
+    { icon: Hammer, label: 'Stolar', color: 'bg-yellow-700' },
+    { icon: Wrench, label: 'Bravar', color: 'bg-slate-600' },
+    { icon: Layers, label: 'Staklar', color: 'bg-sky-400' },
+    { icon: Wind, label: 'Dimnjačar', color: 'bg-gray-700' },
+    { icon: TreePine, label: 'Vrtlar', color: 'bg-green-600' },
+    { icon: Car, label: 'Automehaničar', color: 'bg-blue-700' },
+    { icon: Car, label: 'Autolimar', color: 'bg-indigo-600' },
+    { icon: Refrigerator, label: 'Serviser bijele tehnike', color: 'bg-gray-400' },
+    { icon: Wind, label: 'Serviser klima', color: 'bg-teal-500' },
+    { icon: Sparkles, label: 'Čistač/ica', color: 'bg-purple-500' },
+    { icon: Truck, label: 'Selidbe i prijevoz', color: 'bg-blue-600' },
+    { icon: Sofa, label: 'Monter namještaja', color: 'bg-yellow-600' },
+    { icon: Building2, label: 'Fasader', color: 'bg-orange-400' },
+    { icon: Scissors, label: 'Limar', color: 'bg-slate-500' },
+    { icon: Hammer, label: 'Građevinski radovi', color: 'bg-stone-600' },
+    { icon: Home, label: 'Adaptacije stanova', color: 'bg-emerald-600' },
   ];
+
+  const scrollCategories = (direction) => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 300;
+      scrollContainerRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -66,89 +100,156 @@ const LandingPage = () => {
         </div>
       </nav>
 
-      {/* Hero Section - Premium Marketplace Style */}
-      <section className="pt-24 sm:pt-32 pb-16 sm:pb-24 px-4">
-        <div className="max-w-4xl mx-auto text-center">
+      {/* Hero Section - Premium with Gradient Background */}
+      <section className="relative pt-20 sm:pt-24 overflow-hidden">
+        {/* Background Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-blue-50/30"></div>
+        <div className="absolute top-20 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-blue-100/40 via-transparent to-transparent rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-tr from-amber-50/50 via-transparent to-transparent rounded-full blur-3xl"></div>
+        
+        {/* Decorative Elements */}
+        <div className="absolute top-32 left-10 w-20 h-20 border border-gray-200/50 rounded-2xl rotate-12 hidden lg:block"></div>
+        <div className="absolute top-48 right-20 w-16 h-16 border border-blue-200/50 rounded-full hidden lg:block"></div>
+        <div className="absolute bottom-40 left-1/4 w-12 h-12 bg-amber-100/50 rounded-xl rotate-45 hidden lg:block"></div>
+        
+        <div className="relative max-w-4xl mx-auto text-center px-4 pt-8 sm:pt-12 pb-8">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-gray-100 rounded-full px-5 py-2.5 mb-8">
-            <Sparkles className="w-4 h-4 text-gray-600" />
-            <span className="text-sm font-semibold text-gray-700">Platforma za sve kućne majstore</span>
+          <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-full px-5 py-2.5 mb-6 shadow-sm">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span className="text-sm font-semibold text-gray-700">Više od 500+ majstora u Hrvatskoj</span>
           </div>
 
-          {/* Title - Much Larger */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-black tracking-tight mb-6 leading-[1.1]" style={{fontFamily: "'Sora', sans-serif"}}>
-            Pronađite majstora<br />
-            <span className="text-[#111111]">za svaki posao</span>
+          {/* Title - Premium Typography */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-black tracking-tight mb-5 leading-[1.1]" style={{fontFamily: "'Sora', sans-serif"}}>
+            Pronađite majstora
+            <br />
+            <span className="relative">
+              za svaki posao
+              <svg className="absolute -bottom-2 left-0 w-full h-3 text-blue-500/20" viewBox="0 0 200 12" preserveAspectRatio="none">
+                <path d="M0,8 Q50,0 100,8 T200,8" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round"/>
+              </svg>
+            </span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-lg sm:text-xl text-gray-500 mb-12 max-w-2xl mx-auto leading-relaxed">
-            Vodoinstalater, električar, keramičar i drugi stručnjaci - sve na jednom mjestu.
+          <p className="text-base sm:text-lg text-gray-500 mb-8 max-w-xl mx-auto leading-relaxed">
+            Brzo pronađite provjerene stručnjake za sve kućne popravke i poslove. Bez registracije.
           </p>
 
           {/* Premium Search Card */}
-          <div className="mp-search-container max-w-2xl mx-auto mb-8">
-            {/* Info banner */}
-            <div className="bg-blue-50 rounded-xl p-4 mb-4 flex items-center justify-center gap-2">
-              <CheckCircle className="w-4 h-4 text-blue-600" />
-              <span className="text-sm text-blue-700 font-medium">Rezervacija ne zahtijeva registraciju</span>
-            </div>
-
+          <div className="bg-white rounded-3xl p-4 sm:p-6 shadow-xl shadow-gray-200/50 border border-gray-100 max-w-2xl mx-auto mb-6">
             <form onSubmit={handleSearch}>
-              <div className="space-y-3">
-                <div className="mp-search-input-wrapper">
-                  <Search className="mp-search-icon" />
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex-1 relative">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type="text"
-                    placeholder="Zanimanje (npr. Vodoinstalater)"
+                    placeholder="Što trebate? (npr. Vodoinstalater)"
                     value={searchProfession}
                     onChange={(e) => setSearchProfession(e.target.value)}
-                    className="mp-search-input"
+                    className="w-full bg-gray-50 border-0 rounded-xl pl-12 pr-4 py-4 text-base focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-white transition-all"
                     data-testid="search-profession-input"
                   />
                 </div>
-                <div className="mp-search-input-wrapper">
-                  <MapPin className="mp-search-icon" />
+                <div className="flex-1 relative">
+                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type="text"
                     placeholder="Grad (npr. Zagreb)"
                     value={searchCity}
                     onChange={(e) => setSearchCity(e.target.value)}
-                    className="mp-search-input"
+                    className="w-full bg-gray-50 border-0 rounded-xl pl-12 pr-4 py-4 text-base focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-white transition-all"
                     data-testid="search-city-input"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="mp-search-btn"
+                  className="bg-black text-white rounded-xl px-8 py-4 font-semibold hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 sm:w-auto w-full"
                   data-testid="search-button"
                 >
                   <Search className="w-5 h-5" />
-                  <span>Pronađi majstora</span>
-                  <ArrowRight className="w-5 h-5" />
+                  <span className="sm:hidden lg:inline">Traži</span>
                 </button>
               </div>
             </form>
+            
+            {/* Quick info */}
+            <div className="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-gray-100">
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <CheckCircle className="w-4 h-4 text-green-500" />
+                <span>Bez registracije</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <Clock className="w-4 h-4 text-blue-500" />
+                <span>Brza rezervacija</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Professions Horizontal Scroll Section */}
+      <section className="py-8 sm:py-12 bg-white border-t border-gray-100">
+        <div className="max-w-7xl mx-auto">
+          {/* Section Header */}
+          <div className="flex items-center justify-between px-4 sm:px-6 lg:px-8 mb-6">
+            <div>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900" style={{fontFamily: "'Sora', sans-serif"}}>
+                Pronađi po zanimanju
+              </h2>
+              <p className="text-sm text-gray-500 mt-1">Odaberite kategoriju za brzu pretragu</p>
+            </div>
+            {/* Desktop Navigation Arrows */}
+            <div className="hidden sm:flex items-center gap-2">
+              <button
+                onClick={() => scrollCategories('left')}
+                className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                aria-label="Scroll left"
+              >
+                <ChevronLeft className="w-5 h-5 text-gray-600" />
+              </button>
+              <button
+                onClick={() => scrollCategories('right')}
+                className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                aria-label="Scroll right"
+              >
+                <ChevronRight className="w-5 h-5 text-gray-600" />
+              </button>
+            </div>
           </div>
 
-          {/* Category Quick Links */}
-          <div className="mp-category-grid max-w-md mx-auto">
-            {categories.map((cat, index) => (
+          {/* Horizontal Scrollable Categories */}
+          <div 
+            ref={scrollContainerRef}
+            className="flex gap-3 overflow-x-auto pb-4 px-4 sm:px-6 lg:px-8 scrollbar-hide snap-x snap-mandatory"
+            style={{ 
+              scrollbarWidth: 'none', 
+              msOverflowStyle: 'none',
+              WebkitOverflowScrolling: 'touch'
+            }}
+          >
+            {professionCategories.map((cat, index) => (
               <button
                 key={index}
                 onClick={() => {
                   setSearchProfession(cat.label);
                   navigate(`/pretraga?profession=${encodeURIComponent(cat.label)}`);
                 }}
-                className="mp-category-item"
+                className="flex-shrink-0 snap-start flex items-center gap-3 bg-white border-2 border-gray-100 hover:border-gray-200 hover:shadow-md rounded-2xl px-5 py-4 transition-all group"
+                data-testid={`category-${index}`}
               >
-                <div className="mp-category-icon">
-                  <cat.icon />
+                <div className={`w-11 h-11 ${cat.color} rounded-xl flex items-center justify-center transition-transform group-hover:scale-110`}>
+                  <cat.icon className="w-5 h-5 text-white" strokeWidth={2} />
                 </div>
-                <span className="mp-category-label">{cat.label}</span>
+                <span className="text-sm font-semibold text-gray-700 whitespace-nowrap pr-2">{cat.label}</span>
               </button>
             ))}
           </div>
+
+          {/* Mobile swipe hint */}
+          <p className="text-center text-xs text-gray-400 mt-2 sm:hidden">
+            ← Povuci za više →
+          </p>
         </div>
       </section>
 
@@ -299,6 +400,13 @@ const LandingPage = () => {
           </div>
         </div>
       </footer>
+
+      {/* Hide scrollbar globally for this page */}
+      <style>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </div>
   );
 };
