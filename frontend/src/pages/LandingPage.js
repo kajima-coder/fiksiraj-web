@@ -127,7 +127,7 @@ const LandingPage = () => {
 
             {/* Subtitle */}
             <p className="text-base sm:text-lg text-white/70 mb-8 sm:mb-10 max-w-xl leading-relaxed">
-              Brzo pronađite provjerene stručnjake za sve kućne popravke i poslove. Bez registracije.
+              Brzo pronađite stručnjake za sve kućne popravke i poslove. Bez registracije.
             </p>
           </div>
 
@@ -255,7 +255,7 @@ const LandingPage = () => {
             <div className="mp-section-header mb-12">
               <div>
                 <h2 className="mp-section-title">Izdvojeni majstori</h2>
-                <p className="mp-section-subtitle">Provjereni stručnjaci s najboljim ocjenama</p>
+                <p className="mp-section-subtitle">Najbolje ocijenjeni stručnjaci na platformi</p>
               </div>
               <Link to="/pretraga" className="mp-section-link hidden sm:flex">
                 Pogledaj sve
@@ -335,7 +335,7 @@ const LandingPage = () => {
             {[
               { icon: Search, title: 'Brza pretraga', desc: 'Pronađite idealnog majstora za vaš posao u nekoliko sekundi.', color: 'bg-blue-600' },
               { icon: Calendar, title: 'Jednostavno rezerviranje', desc: 'Rezervirajte termin direktno preko platforme bez telefoniranja.', color: 'bg-purple-600' },
-              { icon: CheckCircle, title: 'Provjereni stručnjaci', desc: 'Svi majstori su verificirani sa ocjenama i recenzijama.', color: 'bg-green-600' },
+              { icon: CheckCircle, title: 'Stvarne recenzije', desc: 'Birajte majstore na temelju ocjena i recenzija stvarnih klijenata.', color: 'bg-green-600' },
               { icon: Users, title: 'Vaš profil', desc: 'Jedinstven link za dijeljenje - fiksiraj.app/majstor/vaše-ime.', color: 'bg-orange-500' },
             ].map((feature, index) => (
               <div key={index} className="mp-info-card text-center">
@@ -373,7 +373,7 @@ const LandingPage = () => {
           <div className="flex flex-col items-center text-center gap-8">
             <span className="text-3xl font-bold tracking-tight" style={{fontFamily: "'Sora', sans-serif"}}>Fiksiraj</span>
             <p className="text-sm text-gray-400 max-w-md leading-relaxed">
-              Platforma za rezervaciju majstora u Hrvatskoj. Pronađite provjerene stručnjake za svaki posao.
+              Platforma za rezervaciju majstora u Hrvatskoj. Pronađite stručnjake za svaki posao.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8">
               <Link to="/pretraga" className="text-sm font-semibold text-gray-300 hover:text-white transition-colors">
