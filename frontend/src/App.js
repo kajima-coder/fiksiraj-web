@@ -14,6 +14,7 @@ import SettingsPage from "@/pages/SettingsPage";
 import PublicBookingPage from "@/pages/PublicBookingPage";
 import SearchResultsPage from "@/pages/SearchResultsPage";
 import ReviewPage from "@/pages/ReviewPage";
+import DeleteAccountPage from "@/pages/DeleteAccountPage";
 import { AuthProvider } from "@/context/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import PrivacyPage from "@/pages/PrivacyPage";
@@ -77,6 +78,7 @@ function App() {
               }
             />
             <Route path="/majstor/:slug" element={<PublicBookingPage />} />
+            <Route path="/delete-account" element={<DeleteAccountPage />} />
           </Routes>
         </BrowserRouter>
         <Toaster position="top-center" richColors />

@@ -388,6 +388,9 @@ const LandingPage = () => {
               <Link to="/privacy" className="text-sm font-semibold text-gray-300 hover:text-white transition-colors">
                 Politika privatnosti
               </Link>
+              <Link to="/delete-account" className="text-sm font-semibold text-gray-300 hover:text-white transition-colors" data-testid="footer-delete-account-link">
+                Brisanje računa
+              </Link>
             </div>
             
             {/* Payment Trust Section */}
