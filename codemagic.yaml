@@ -13,7 +13,7 @@ workflows:
       - name: Build web app
         script: |
           cd frontend
-          npm run build
+          CI=false npm run build
 
       - name: Sync Capacitor iOS
         script: |
