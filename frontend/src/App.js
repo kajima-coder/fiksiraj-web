@@ -19,11 +19,13 @@ import { AuthProvider } from "@/context/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import PrivacyPage from "@/pages/PrivacyPage";
 import TermsPage from "@/pages/TermsPage";
+import DebugErrorScreen from "@/components/DebugErrorScreen";
 
 function App() {
   return (
     <AuthProvider>
       <div className="App">
+        <DebugErrorScreen />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<LandingPage />} />
