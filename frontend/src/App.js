@@ -81,6 +81,7 @@ function App() {
             />
             <Route path="/majstor/:slug" element={<PublicBookingPage />} />
             <Route path="/delete-account" element={<DeleteAccountPage />} />
+            <Route path="*" element={<LandingPage />} />
           </Routes>
         </BrowserRouter>
         <Toaster position="top-center" richColors />
