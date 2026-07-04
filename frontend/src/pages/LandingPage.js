@@ -18,13 +18,21 @@ const LandingPage = () => {
   }, []);
 
   const fetchFeaturedProfessionals = async () => {
-    try {
-      const response = await axios.get(`${API}/public/featured`);
-      setFeaturedProfessionals(response.data.professionals);
-    } catch (error) {
-      console.error('Error fetching featured professionals:', error);
-    }
-  };
+  try {
+    const response = await axios.get(`${API}/public/featured`);
+
+    const professionals = Array.isArray(response.data?.professionals)
+      ? response.data.professionals
+      : Array.isArray(response.data)
+        ? response.data
+        : [];
+
+    setFeaturedProfessionals(professionals);
+  } catch (error) {
+    console.error('Error fetching featured professionals:', error);
+    setFeaturedProfessionals([]);
+  }
+};
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -249,7 +257,7 @@ const LandingPage = () => {
       </section>
 
       {/* Featured Professionals - Image First Cards */}
-      {featuredProfessionals.length > 0 && (
+      {Array.isArray(featuredProfessionals) && featuredProfessionals.length > 0 && (
         <section className="py-16 sm:py-24 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mp-section-header mb-12">
@@ -282,13 +290,13 @@ const LandingPage = () => {
                       />
                     ) : (
                       <div className="mp-card-image-placeholder">
-                        {prof.name.charAt(0)}
+                        {prof.name?.charAt(0) || "?"}
                       </div>
                     )}
                     {/* Rating Badge */}
                     <div className="mp-card-badge">
                       <Star />
-                      <span>{prof.rating.toFixed(1)}</span>
+                      <span>{Number(prof.rating || 0).toFixed(1)}</span>
                     </div>
                   </div>
 
