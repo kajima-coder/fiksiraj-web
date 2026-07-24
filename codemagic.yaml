@@ -14,7 +14,13 @@ workflows:
       - name: Install frontend dependencies
         script: |
           cd frontend
-          npx -y yarn@1.22.22 install --frozen-lockfile
+          corepack disable || true
+          npm install --global yarn@1.22.22
+          echo "Node version:"
+          node --version
+          echo "Yarn version:"
+          yarn --version
+          yarn install --frozen-lockfile --non-interactive
 
       - name: Check frontend env
         script: |
@@ -25,7 +31,7 @@ workflows:
       - name: Build web app
         script: |
           cd frontend
-          CI=false npx -y yarn@1.22.22 build
+          CI=false yarn build
 
       - name: Sync Capacitor iOS
         script: |
@@ -73,7 +79,13 @@ workflows:
       - name: Install frontend dependencies
         script: |
           cd frontend
-          npx -y yarn@1.22.22 install --frozen-lockfile
+          corepack disable || true
+          npm install --global yarn@1.22.22
+          echo "Node version:"
+          node --version
+          echo "Yarn version:"
+          yarn --version
+          yarn install --frozen-lockfile --non-interactive
 
       - name: Check frontend env
         script: |
@@ -84,7 +96,7 @@ workflows:
       - name: Build web app
         script: |
           cd frontend
-          CI=false npx -y yarn@1.22.22 build
+          CI=false yarn build
 
       - name: Sync Capacitor iOS
         script: |
