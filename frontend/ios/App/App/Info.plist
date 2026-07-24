@@ -45,5 +45,13 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+<string>Fiksiraj koristi vašu galeriju kako biste mogli odabrati profilnu sliku ili logotip.</string>
+
+<key>NSPhotoLibraryAddUsageDescription</key>
+<string>Fiksiraj može spremiti odabranu profilnu sliku ili logotip u vašu galeriju.</string>
+
+<key>NSCameraUsageDescription</key>
+<string>Fiksiraj koristi kameru za dodavanje profilne slike ili logotipa.</string>
 </dict>
 </plist>
