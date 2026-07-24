@@ -32,6 +32,10 @@ public class FiksirajIAPPlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "finishTransaction", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "restore", returnType: CAPPluginReturnPromise)
     ]
+
+     
+    private var updatesTask: Task<Void, Never>?
+    
     override public func load() {
         // Register the singleton listener. We do NOT auto-finish anything
         // here; we only forward sanitized transaction updates to JS so the
