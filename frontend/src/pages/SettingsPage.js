@@ -3,12 +3,15 @@ import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
 import MobileBottomNav from '@/components/MobileBottomNav';
 import UserAvatar from '@/components/UserAvatar';
-import { User, Building2, Mail, Phone, Link as LinkIcon, CreditCard, ExternalLink, Loader2, CheckCircle, AlertTriangle, Clock, Copy, Camera, Image, Upload, X, Trash2 } from 'lucide-react';
+import AppleSubscriptionCard from '@/components/AppleSubscriptionCard';
+import { User, Building2, Mail, Phone, Link as LinkIcon, CreditCard, ExternalLink, Loader2, CheckCircle, AlertTriangle, Clock, Copy, Camera, Image, Upload, X, Trash2, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import axios from 'axios';
 import { getErrorMessage } from '@/utils/errorUtils';
+import { pickImageFromLibrary, isIOS as isIOSPlatform } from '@/lib/imagePicker';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const IS_IOS = isIOSPlatform();
 
 const SettingsPage = () => {
   const { user } = useAuth();
@@ -19,7 +22,7 @@ const SettingsPage = () => {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [uploadingProfile, setUploadingProfile] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
-  
+
   const profileInputRef = useRef(null);
   const logoInputRef = useRef(null);
 
@@ -143,6 +146,71 @@ const SettingsPage = () => {
     }
   };
 
+  // iOS-safe upload trigger: on iOS use Photo Library only (no "Take Photo"), else <input type="file">
+  const triggerProfileImagePicker = async () => {
+    if (uploadingProfile) return;
+    if (IS_IOS) {
+      try {
+        const file = await pickImageFromLibrary({ maxBytes: 5 * 1024 * 1024 });
+        if (!file) return;
+        await uploadProfileImageFile(file);
+      } catch (e) {
+        toast.error(e?.message || 'Greška pri odabiru slike');
+      }
+      return;
+    }
+    profileInputRef.current?.click();
+  };
+
+  const triggerLogoPicker = async () => {
+    if (uploadingLogo) return;
+    if (IS_IOS) {
+      try {
+        const file = await pickImageFromLibrary({ maxBytes: 2 * 1024 * 1024 });
+        if (!file) return;
+        await uploadLogoFile(file);
+      } catch (e) {
+        toast.error(e?.message || 'Greška pri odabiru slike');
+      }
+      return;
+    }
+    logoInputRef.current?.click();
+  };
+
+  const uploadProfileImageFile = async (file) => {
+    setUploadingProfile(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      await axios.post(`${API}/upload/profile-image`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      toast.success('Profilna slika uspješno učitana!');
+      fetchData();
+    } catch (error) {
+      toast.error(getErrorMessage(error, 'Greška pri učitavanju slike'));
+    } finally {
+      setUploadingProfile(false);
+    }
+  };
+
+  const uploadLogoFile = async (file) => {
+    setUploadingLogo(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      await axios.post(`${API}/upload/company-logo`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      toast.success('Logo firme uspješno učitan!');
+      fetchData();
+    } catch (error) {
+      toast.error(getErrorMessage(error, 'Greška pri učitavanju loga'));
+    } finally {
+      setUploadingLogo(false);
+    }
+  };
+
   const calculateTrialDaysRemaining = () => {
     if (!profile?.subscription_activated_at) return null;
     
@@ -179,6 +247,10 @@ const SettingsPage = () => {
   };
 
   const handleActivateSubscription = async () => {
+    // iOS: subscription lifecycle lives inside <AppleSubscriptionCard />.
+    // On web/Android → Stripe Checkout (unchanged).
+    if (IS_IOS) return;
+
     setCheckoutLoading(true);
     try {
       const originUrl = window.location.origin;
@@ -198,6 +270,15 @@ const SettingsPage = () => {
     } finally {
       setCheckoutLoading(false);
     }
+  };
+
+  const handleAppleStatusChange = (backendStatus) => {
+    // Merge backend verify response into local subscription cache and
+    // refetch to keep the whole page consistent.
+    if (backendStatus) {
+      setSubscriptionStatus((prev) => ({ ...(prev || {}), ...backendStatus }));
+    }
+    fetchData();
   };
 
   const publicLink = `${window.location.origin}/majstor/${user?.slug}`;
@@ -294,7 +375,10 @@ const SettingsPage = () => {
 
   const statusDisplay = getSubscriptionStatusDisplay();
   const hasStripeCustomer = !!subscriptionStatus?.stripe_customer_id;
+  const subProvider = subscriptionStatus?.subscription_provider || (hasStripeCustomer ? 'stripe' : null);
   const canManageSubscription = hasStripeCustomer && ['trialing', 'active', 'past_due'].includes(subscriptionStatus?.subscription_status);
+  const iosCanManageThroughStripe = IS_IOS && subProvider === 'stripe' && ['active', 'trialing', 'past_due'].includes(subscriptionStatus?.subscription_status);
+  const appleActive = subProvider === 'apple' && ['active', 'trialing'].includes(subscriptionStatus?.subscription_status);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -366,7 +450,7 @@ const SettingsPage = () => {
                       <p className="text-sm font-semibold text-gray-700 mb-3">Profilna slika učitana</p>
                       <div className="flex gap-2 justify-center">
                         <button
-                          onClick={() => profileInputRef.current?.click()}
+                          onClick={() => triggerProfileImagePicker()}
                           className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-xl text-sm font-semibold text-gray-700 transition-colors flex items-center gap-2"
                           disabled={uploadingProfile}
                         >
@@ -386,7 +470,7 @@ const SettingsPage = () => {
                 ) : (
                   // Show upload area
                   <div 
-                    onClick={() => !uploadingProfile && profileInputRef.current?.click()}
+                    onClick={() => triggerProfileImagePicker()}
                     className={`border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center hover:border-gray-300 hover:bg-gray-50/50 transition-all cursor-pointer group ${uploadingProfile ? 'opacity-50 cursor-wait' : ''}`}
                   >
                     <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-gray-200 transition-colors">
@@ -435,7 +519,7 @@ const SettingsPage = () => {
                       <p className="text-sm font-semibold text-gray-700 mb-3">Logo firme učitan</p>
                       <div className="flex gap-2 justify-center">
                         <button
-                          onClick={() => logoInputRef.current?.click()}
+                          onClick={() => triggerLogoPicker()}
                           className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-xl text-sm font-semibold text-gray-700 transition-colors flex items-center gap-2"
                           disabled={uploadingLogo}
                         >
@@ -455,7 +539,7 @@ const SettingsPage = () => {
                 ) : (
                   // Show upload area
                   <div 
-                    onClick={() => !uploadingLogo && logoInputRef.current?.click()}
+                    onClick={() => triggerLogoPicker()}
                     className={`border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center hover:border-gray-300 hover:bg-gray-50/50 transition-all cursor-pointer group ${uploadingLogo ? 'opacity-50 cursor-wait' : ''}`}
                   >
                     <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-gray-200 transition-colors">
@@ -614,67 +698,78 @@ const SettingsPage = () => {
                 </div>
               )}
 
-              {/* Subscription Actions */}
+              {/* Subscription Actions — platform-gated */}
               <div className="space-y-4">
-                {canManageSubscription ? (
-                  <button
-                    onClick={handleManageSubscription}
-                    disabled={portalLoading}
-                    className="mp-btn-primary w-full"
-                    data-testid="manage-subscription-button"
-                  >
-                    {portalLoading ? (
-                      <>
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                        Učitavanje...
-                      </>
-                    ) : (
-                      <>
-                        <ExternalLink className="w-5 h-5" />
-                        Upravljaj pretplatom
-                      </>
-                    )}
-                  </button>
+                {IS_IOS ? (
+                  <AppleSubscriptionCard
+                    existingStripeActive={iosCanManageThroughStripe}
+                    appleActive={appleActive}
+                    onStatusChange={handleAppleStatusChange}
+                  />
                 ) : (
-                  <div className="text-center py-4">
-                    <p className="text-gray-500 text-sm mb-4">
-                      {!hasStripeCustomer 
-                        ? 'Pretplata još nije aktivirana.' 
-                        : 'Za upravljanje pretplatom potrebna je aktivna pretplata.'}
-                    </p>
-                    <button 
-                      onClick={handleActivateSubscription}
-                      disabled={checkoutLoading}
-                      className="mp-btn-primary"
-                      data-testid="settings-activate-subscription"
-                    >
-                      {checkoutLoading ? (
-                        <>
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                          Učitavanje...
-                        </>
-                      ) : (
-                        <>
-                          <CreditCard className="w-5 h-5" />
-                          {!hasStripeCustomer ? 'Aktiviraj pretplatu' : 'Obnovi pretplatu'}
-                        </>
-                      )}
-                    </button>
-                  </div>
-                )}
+                  <>
+                    {/* Web / Android: existing Stripe flow (unchanged) */}
+                    {canManageSubscription ? (
+                      <button
+                        onClick={handleManageSubscription}
+                        disabled={portalLoading}
+                        className="mp-btn-primary w-full"
+                        data-testid="manage-subscription-button"
+                      >
+                        {portalLoading ? (
+                          <>
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                            Učitavanje...
+                          </>
+                        ) : (
+                          <>
+                            <ExternalLink className="w-5 h-5" />
+                            Upravljaj pretplatom
+                          </>
+                        )}
+                      </button>
+                    ) : (
+                      <div className="text-center py-4">
+                        <p className="text-gray-500 text-sm mb-4">
+                          {!hasStripeCustomer
+                            ? 'Pretplata još nije aktivirana.'
+                            : 'Za upravljanje pretplatom potrebna je aktivna pretplata.'}
+                        </p>
+                        <button
+                          onClick={handleActivateSubscription}
+                          disabled={checkoutLoading}
+                          className="mp-btn-primary"
+                          data-testid="settings-activate-subscription"
+                        >
+                          {checkoutLoading ? (
+                            <>
+                              <Loader2 className="w-5 h-5 animate-spin" />
+                              Učitavanje...
+                            </>
+                          ) : (
+                            <>
+                              <CreditCard className="w-5 h-5" />
+                              {!hasStripeCustomer ? 'Aktiviraj pretplatu' : 'Obnovi pretplatu'}
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    )}
 
-                {/* Portal Info */}
-                {canManageSubscription && (
-                  <div className="bg-gray-50 rounded-xl p-4 text-center">
-                    <p className="text-xs text-gray-500 mb-2">
-                      U Stripe portalu možete:
-                    </p>
-                    <ul className="text-xs text-gray-500 space-y-1">
-                      <li>• Otkazati pretplatu</li>
-                      <li>• Ažurirati način plaćanja</li>
-                      <li>• Pregledati račune i uplatnice</li>
-                    </ul>
-                  </div>
+                    {/* Portal Info (Stripe only) */}
+                    {canManageSubscription && (
+                      <div className="bg-gray-50 rounded-xl p-4 text-center">
+                        <p className="text-xs text-gray-500 mb-2">
+                          U Stripe portalu možete:
+                        </p>
+                        <ul className="text-xs text-gray-500 space-y-1">
+                          <li>• Otkazati pretplatu</li>
+                          <li>• Ažurirati način plaćanja</li>
+                          <li>• Pregledati račune i uplatnice</li>
+                        </ul>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>

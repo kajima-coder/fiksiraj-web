@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import MobileBottomNav from '@/components/MobileBottomNav';
 import OnboardingTour from '@/components/OnboardingTour';
@@ -11,8 +11,10 @@ import axios from 'axios';
 import { format } from 'date-fns';
 import { hr } from 'date-fns/locale';
 import { getErrorMessage } from '@/utils/errorUtils';
+import { isIOS as isIOSPlatform } from '@/lib/imagePicker';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const IS_IOS = isIOSPlatform();
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -116,7 +118,16 @@ const Dashboard = () => {
     }
   };
 
+  const navigate = useNavigate();
+
   const handleActivateSubscription = async () => {
+    // iOS: subscription lifecycle lives inside Settings → <AppleSubscriptionCard />.
+    // From Dashboard we only navigate. No StoreKit init, no purchase call.
+    if (IS_IOS) {
+      navigate('/postavke');
+      return;
+    }
+
     setSubscriptionLoading(true);
     try {
       const originUrl = window.location.origin;

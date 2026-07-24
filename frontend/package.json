@@ -5,6 +5,8 @@
   "homepage": ".",
   "dependencies": {
     "@capacitor/android": "6",
+    "@capacitor/camera": "6",
+    "@capacitor/core": "6",
     "@capacitor/ios": "6",
     "@capacitor/splash-screen": "6",
     "@hookform/resolvers": "^5.0.1",
@@ -80,13 +82,14 @@
       "last 1 safari version"
     ]
   },
-   "devDependencies": {
+  "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "6",
-    "@capacitor/core": "6",
     "@craco/craco": "^7.1.0",
     "@eslint/js": "9.23.0",
+    "@testing-library/jest-dom": "^5",
+    "@testing-library/react": "^14",
     "autoprefixer": "^10.4.20",
     "eslint": "9.23.0",
     "eslint-plugin-import": "2.31.0",
@@ -95,12 +98,6 @@
     "eslint-plugin-react-hooks": "5.2.0",
     "globals": "15.15.0",
     "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.17",
-    "ajv": "6.12.6",
-    "ajv-keywords": "3.5.2"
-  },
-  "engines": {
-    "node": "20.x"
+    "tailwindcss": "^3.4.17"
   }
 }
-
