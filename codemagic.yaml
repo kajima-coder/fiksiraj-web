@@ -7,12 +7,14 @@ workflows:
     environment:
       groups:
         - production
+      node: 20
+      cocoapods: default
 
     scripts:
-      - name: Install dependencies
+      - name: Install frontend dependencies
         script: |
           cd frontend
-          npm install --legacy-peer-deps
+          npx -y yarn@1.22.22 install --frozen-lockfile
 
       - name: Check frontend env
         script: |
@@ -23,7 +25,7 @@ workflows:
       - name: Build web app
         script: |
           cd frontend
-          CI=false npm run build
+          CI=false npx -y yarn@1.22.22 build
 
       - name: Sync Capacitor iOS
         script: |
@@ -35,7 +37,7 @@ workflows:
           cd frontend/ios/App
           pod install
 
-      - name: Build iOS project
+      - name: Build iOS simulator project
         script: |
           cd frontend/ios/App
           xcodebuild \
@@ -44,6 +46,11 @@ workflows:
             -configuration Debug \
             -sdk iphonesimulator \
             build
+
+    artifacts:
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+
 
   ios-testflight:
     name: iOS TestFlight Build
@@ -56,15 +63,17 @@ workflows:
     environment:
       groups:
         - production
+      node: 20
+      cocoapods: default
       ios_signing:
         distribution_type: app_store
         bundle_identifier: hr.solvix.fiksiraj
 
     scripts:
-      - name: Install dependencies
+      - name: Install frontend dependencies
         script: |
           cd frontend
-          npm install --legacy-peer-deps
+          npx -y yarn@1.22.22 install --frozen-lockfile
 
       - name: Check frontend env
         script: |
@@ -75,7 +84,7 @@ workflows:
       - name: Build web app
         script: |
           cd frontend
-          CI=false npm run build
+          CI=false npx -y yarn@1.22.22 build
 
       - name: Sync Capacitor iOS
         script: |
@@ -87,16 +96,22 @@ workflows:
           cd frontend/ios/App
           pod install
 
-      - name: Build IPA
+      - name: Configure iOS code signing
         script: |
           cd frontend/ios/App
           xcode-project use-profiles
+
+      - name: Build IPA
+        script: |
+          cd frontend/ios/App
           xcode-project build-ipa \
             --workspace App.xcworkspace \
             --scheme App
 
     artifacts:
       - frontend/ios/App/build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
 
     publishing:
       app_store_connect:
