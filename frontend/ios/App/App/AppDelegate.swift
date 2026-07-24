@@ -1,6 +1,12 @@
 import UIKit
 import Capacitor
 
+class FiksirajBridgeViewController: CAPBridgeViewController {
+    override open func capacitorDidLoad() {
+        bridge?.registerPluginInstance(FiksirajIAPPlugin())
+    }
+}
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 

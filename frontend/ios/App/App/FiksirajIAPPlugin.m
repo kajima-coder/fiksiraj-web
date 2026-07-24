@@ -11,9 +11,6 @@
 #import <Foundation/Foundation.h>
 #import <Capacitor/Capacitor.h>
 
-CAP_PLUGIN(FiksirajIAPPlugin, "FiksirajIAP",
-    CAP_PLUGIN_METHOD(loadProduct, CAPPluginReturnPromise);
-    CAP_PLUGIN_METHOD(purchase, CAPPluginReturnPromise);
-    CAP_PLUGIN_METHOD(finishTransaction, CAPPluginReturnPromise);
-    CAP_PLUGIN_METHOD(restore, CAPPluginReturnPromise);
-)
+#import <Foundation/Foundation.h>
+
+// FiksirajIAP is registered explicitly by FiksirajBridgeViewController.

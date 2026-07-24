@@ -22,14 +22,16 @@ import StoreKit
 
 @available(iOS 15.0, *)
 @objc(FiksirajIAPPlugin)
-public class FiksirajIAPPlugin: CAPPlugin {
+public class FiksirajIAPPlugin: CAPPlugin, CAPBridgedPlugin {
+    public let identifier = "FiksirajIAPPlugin"
+    public let jsName = "FiksirajIAP"
 
-    // ---- One-time transaction updates listener --------------------------
-    // Registered exactly once for the app lifecycle (per plugin instance)
-    // by CAPPlugin.load(). Duplicate listeners cannot be introduced by
-    // React remounting because JS never touches this task.
-    private var updatesTask: Task<Void, Never>?
-
+    public let pluginMethods: [CAPPluginMethod] = [
+        CAPPluginMethod(name: "loadProduct", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "purchase", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "finishTransaction", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "restore", returnType: CAPPluginReturnPromise)
+    ]
     override public func load() {
         // Register the singleton listener. We do NOT auto-finish anything
         // here; we only forward sanitized transaction updates to JS so the
