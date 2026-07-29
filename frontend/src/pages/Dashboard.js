@@ -366,8 +366,20 @@ const Dashboard = () => {
                 </div>
                 <div className="mp-subscription-price">
                   <div>
-                    <p className="mp-subscription-price-value">€10<span className="mp-subscription-price-period">/mjesečno</span></p>
-                    <p className="mp-subscription-price-trial">30 dana besplatnog probnog perioda</p>
+                    {IS_IOS ? (
+                        <p className="mp-subscription-price-trial">
+                          Mjesečna pretplata putem Apple računa.
+                        </p>
+                      ) : (
+                        <>
+                          <p className="mp-subscription-price-value">
+                            €10<span className="mp-subscription-price-period">/mjesečno</span>
+                          </p>
+                          <p className="mp-subscription-price-trial">
+                            30 dana besplatnog probnog perioda
+                          </p>
+                        </>
+                      )}
                   </div>
                   <button
                     onClick={handleActivateSubscription}
@@ -389,8 +401,20 @@ const Dashboard = () => {
             ) : (
               <div className="mp-subscription-price">
                 <div>
-                  <p className="mp-subscription-price-value">€10<span className="mp-subscription-price-period">/mjesečno</span></p>
-                  <p className="mp-subscription-price-trial">30 dana besplatnog probnog perioda</p>
+                 {IS_IOS ? (
+                      <p className="mp-subscription-price-trial">
+                        Mjesečna pretplata putem Apple računa.
+                      </p>
+                    ) : (
+                      <>
+                        <p className="mp-subscription-price-value">
+                          €10<span className="mp-subscription-price-period">/mjesečno</span>
+                        </p>
+                        <p className="mp-subscription-price-trial">
+                          30 dana besplatnog probnog perioda
+                        </p>
+                      </>
+                    )}
                 </div>
                 <button
                   onClick={handleActivateSubscription}

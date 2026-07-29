@@ -307,7 +307,7 @@ const SettingsPage = () => {
         iconBg: 'bg-green-600',
         statusClass: 'mp-subscription-status-active',
         title: 'Pretplata aktivna',
-        subtitle: '€10/mjesečno',
+        subtitle: IS_IOS ? 'Aktivno' : '€10/mjesečno',
         description: 'Uživate u svim premium značajkama.'
       };
     }
