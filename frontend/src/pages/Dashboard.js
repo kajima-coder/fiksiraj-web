@@ -173,7 +173,7 @@ const Dashboard = () => {
     }
   };
 
-  const publicLink = `${window.location.origin}/majstor/${user?.slug}`;
+  const publicLink = `https://solvix.hr/majstor/${user?.slug}`;
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(publicLink);

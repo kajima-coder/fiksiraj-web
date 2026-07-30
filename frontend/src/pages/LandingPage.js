@@ -3,8 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Calendar, Clock, CheckCircle, Users, Search, Star, MapPin, ArrowRight, Sparkles, Wrench, Zap, Paintbrush, Home, Hammer, Droplets, Flame, TreePine, Car, Refrigerator, Wind, Truck, Sofa, Building2, Scissors, Layers, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import axios from 'axios';
+import { isIOS as isIOSPlatform } from '@/lib/imagePicker';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const IS_IOS = isIOSPlatform();
 
 const LandingPage = () => {
   const [searchProfession, setSearchProfession] = useState('');
@@ -401,13 +403,19 @@ const LandingPage = () => {
               </Link>
             </div>
             
-            {/* Payment Trust Section */}
-            <div className="flex items-center justify-center gap-2 pt-6 border-t border-gray-800 w-full text-gray-500">
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-              </svg>
-              <span className="text-sm">Sigurna plaćanja putem Stripe</span>
-            </div>
+           {/* Payment Trust Section — hidden in native iOS app */}
+              {!IS_IOS && (
+                <div className="flex items-center justify-center gap-2 pt-6 border-t border-gray-800 w-full text-gray-500">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fillRule="evenodd"
+                      d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  <span className="text-sm">Sigurna plaćanja putem Stripe</span>
+                </div>
+              )}
             
             <p className="text-sm text-gray-500">
               &copy; 2026 Fiksiraj. Sva prava pridržana.
