@@ -1,8 +1,20 @@
+import { Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 
 export default function TermsPage() {
   return (
     <div className="min-h-screen bg-slate-950 text-white px-6 py-16">
       <div className="max-w-4xl mx-auto space-y-6">
+        <div className="flex">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-slate-300 hover:text-white transition-colors"
+            data-testid="terms-back-link"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Natrag
+          </Link>
+        </div>
         <h1 className="text-4xl font-bold">Uvjeti korištenja</h1>
 
         <p>
