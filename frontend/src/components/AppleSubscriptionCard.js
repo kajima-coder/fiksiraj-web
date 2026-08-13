@@ -189,11 +189,27 @@ export default function AppleSubscriptionCard({
 
   return (
     <div className="text-center py-4" data-testid="apple-subscription-card">
+      <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-4 text-left" data-testid="apple-premium-benefits">
+        <p className="text-sm font-bold text-gray-900 mb-2">
+          Fiksiraj Premium uključuje:
+        </p>
+        <ul className="space-y-2 text-sm text-gray-700">
+          <li>• upravljanje profesionalnim profilom i uslugama</li>
+          <li>• primanje i upravljanje rezervacijama klijenata</li>
+          <li>• javni profil s vlastitim linkom za rezervacije</li>
+          <li>• pregled i upravljanje recenzijama klijenata</li>
+          <li>• puni pristup Premium funkcijama aplikacije</li>
+        </ul>
+      </div>
+
       <p className="text-gray-500 text-sm mb-4" data-testid="apple-subscription-state">
         {state === STATES.INITIALIZING && 'Priprema pretplate...'}
         {state === STATES.LOADING_PRODUCT && 'Učitavanje proizvoda...'}
         {state === STATES.READY && (
-          <>Aktivirajte mjesečnu pretplatu putem Apple računa.{priceLabel ? ` (${priceLabel} / mjesečno)` : ''}</>
+          <>
+            Mjesečna pretplata putem Apple računa
+            {priceLabel ? ` — ${priceLabel} mjesečno.` : '.'}
+          </>
         )}
         {state === STATES.PRODUCT_UNAVAILABLE && 'Apple pretplata trenutno nije dostupna. Pokušajte ponovno kasnije.'}
         {state === STATES.PURCHASING && 'Kupnja u tijeku...'}
@@ -205,6 +221,10 @@ export default function AppleSubscriptionCard({
         {state === STATES.RESTORE_SUCCESS && 'Pretplata vraćena.'}
         {state === STATES.RESTORE_EMPTY && 'Nema pretplate za vraćanje.'}
         {state === STATES.RESTORE_FAILED && 'Vraćanje kupnje nije uspjelo.'}
+      </p>
+
+      <p className="text-xs text-gray-500 mb-4">
+        Pretplata se automatski obnavlja svaki mjesec dok je ne otkažete u postavkama Apple računa.
       </p>
 
       <div className="space-y-3">

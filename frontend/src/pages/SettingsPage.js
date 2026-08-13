@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
 import MobileBottomNav from '@/components/MobileBottomNav';
@@ -14,7 +15,9 @@ const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const IS_IOS = isIOSPlatform();
 
 const SettingsPage = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
   const [profile, setProfile] = useState(null);
   const [subscriptionStatus, setSubscriptionStatus] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -22,6 +25,8 @@ const SettingsPage = () => {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [uploadingProfile, setUploadingProfile] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deletingAccount, setDeletingAccount] = useState(false);
 
   const profileInputRef = useRef(null);
   const logoInputRef = useRef(null);
@@ -279,6 +284,30 @@ const SettingsPage = () => {
       setSubscriptionStatus((prev) => ({ ...(prev || {}), ...backendStatus }));
     }
     fetchData();
+  };
+
+  const handleDeleteAccount = async () => {
+    if (deletingAccount) return;
+
+    setDeletingAccount(true);
+
+    try {
+      await axios.delete(`${API}/account`);
+
+      logout();
+      toast.success('Račun je trajno obrisan.');
+      navigate('/', { replace: true });
+    } catch (error) {
+      console.error('Account deletion failed:', error);
+
+      const message =
+        error?.response?.data?.detail ||
+        'Brisanje računa nije uspjelo. Pokušajte ponovno.';
+
+      toast.error(message);
+    } finally {
+      setDeletingAccount(false);
+    }
   };
 
   const publicLink = `https://solvix.hr/majstor/${user?.slug}`;
@@ -779,28 +808,101 @@ const SettingsPage = () => {
           <div className="mt-6">
             <div className="mp-info-card" style={{ padding: '24px' }}>
               <div className="flex items-center gap-4 mb-4">
-                <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
-                  <User className="w-5 h-5 text-gray-400" />
+                <div className="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center">
+                  <Trash2 className="w-5 h-5 text-red-600" />
                 </div>
-                <h3 className="text-base font-bold text-gray-700">Brisanje računa</h3>
+                <div>
+                  <h3 className="text-base font-bold text-gray-700">
+                    Brisanje računa
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    Trajno obrišite svoj Fiksiraj račun i povezane podatke.
+                  </p>
+                </div>
               </div>
-              <p className="text-sm text-gray-600 mb-4">
-                Za trajno brisanje računa kontaktirajte{' '}
-                <a 
-                  href="mailto:support@solvix.hr" 
-                  className="text-blue-600 hover:underline font-medium"
+
+              {!showDeleteConfirm ? (
+                <button
+                  type="button"
+                  onClick={() => setShowDeleteConfirm(true)}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-red-600 hover:text-red-700 transition-colors"
+                  data-testid="delete-account-button"
                 >
-                  support@solvix.hr
-                </a>
-              </p>
-              <a
-                href="mailto:support@solvix.hr"
-                className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-blue-600 transition-colors"
-                data-testid="delete-account-link"
-              >
-                <Mail className="w-4 h-4" />
-                support@solvix.hr
-              </a>
+                  <Trash2 className="w-4 h-4" />
+                  Trajno obriši račun
+                </button>
+              ) : (
+                <div
+                  className="mt-4 border border-red-200 bg-red-50 rounded-xl p-4"
+                  data-testid="delete-account-confirmation"
+                >
+                  <div className="flex items-start gap-3 mb-4">
+                    <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+
+                    <div className="space-y-2">
+                      <p className="text-sm font-semibold text-red-800">
+                        Jeste li sigurni da želite trajno obrisati račun?
+                      </p>
+
+                      <p className="text-sm text-red-700">
+                        Obrisat će se vaš profil, usluge, rezervacije, recenzije i
+                        ostali podaci povezani s računom. Ovu radnju nije moguće poništiti.
+                      </p>
+
+                      {IS_IOS && (
+                        <div className="space-y-2">
+                          <p className="text-sm text-red-700">
+                            Brisanje Fiksiraj računa ne otkazuje automatski aktivnu Apple
+                            pretplatu. Apple pretplatom možete upravljati kroz postavke
+                            svog Apple računa.
+                          </p>
+                          <a
+                            href="https://apps.apple.com/account/subscriptions"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1 text-sm font-semibold text-red-700 underline hover:text-red-800"
+                          >
+                            Upravljaj Apple pretplatama
+                            <ExternalLink className="w-4 h-4" />
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-3">
+                    <button
+                      type="button"
+                      onClick={handleDeleteAccount}
+                      disabled={deletingAccount}
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-semibold hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                      data-testid="confirm-delete-account-button"
+                    >
+                      {deletingAccount ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Brisanje...
+                        </>
+                      ) : (
+                        <>
+                          <Trash2 className="w-4 h-4" />
+                          Da, trajno obriši moj račun
+                        </>
+                      )}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setShowDeleteConfirm(false)}
+                      disabled={deletingAccount}
+                      className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 text-sm font-semibold hover:bg-gray-50 disabled:opacity-50"
+                      data-testid="cancel-delete-account-button"
+                    >
+                      Odustani
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
